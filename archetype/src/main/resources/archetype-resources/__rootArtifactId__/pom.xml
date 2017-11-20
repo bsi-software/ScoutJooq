@@ -25,6 +25,8 @@
     <module>../${rootArtifactId}.database</module>
     <module>../${rootArtifactId}.ui.html</module>
     <module>../${rootArtifactId}.docx4j</module>
+    <module>../${rootArtifactId}.ui.html.app.war</module>
+    <module>../${rootArtifactId}.server.app.war</module>
   </modules>
 	
 	<dependencyManagement>

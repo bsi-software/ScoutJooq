@@ -73,4 +73,5 @@
 			<archive>http://dev.eclipse.org/mhonarc/lists/scout-dev</archive>
 		</mailingList>
 	</mailingLists>
+	<description>A very simple archetype of a basic application with a jooq/postgres database connection</description>
 </project>
