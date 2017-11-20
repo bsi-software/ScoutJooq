@@ -31,3 +31,11 @@ Properties used in the archetype
 ## Post Generation Tasks
 
 All config.properties files need to be updated with proper security keys. These can be generated with the appropriate scout utilities
+
+## Changing from Postgres to other Database
+
+There are several tasks to be performed:
+
+1. Change the JOOQ Dialect and related items in the database project.
+2. Import an appropriate driver in the database project pom.
+3. Change config.properties files to use the correct jdbc string and driver name
