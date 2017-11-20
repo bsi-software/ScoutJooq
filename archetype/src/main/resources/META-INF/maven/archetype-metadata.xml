@@ -5,9 +5,7 @@
 	xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<requiredProperties>
-		<requiredProperty key="appName">
-			<defaultValue>Default Application Name</defaultValue>
-		</requiredProperty>
+		<requiredProperty key="appName" />
 		<requiredProperty key="javaVersion">
 			<defaultValue>1.8</defaultValue>
 		</requiredProperty>
