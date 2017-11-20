@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<version>${version}</version>
+		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
+		<groupId>${groupId}</groupId>
+		<artifactId>${rootArtifactId}</artifactId>
+	</parent>
+	<artifactId>${rootArtifactId}.${artifactId}</artifactId>
+	<name>${appName} HTML UI</name>
+	<dependencies>		
+	<!-- application dependency -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>${rootArtifactId}.client</artifactId>
+		</dependency>		
+		<!-- framework dependency -->
+		<dependency>
+			<groupId>org.eclipse.scout.rt</groupId>
+			<artifactId>org.eclipse.scout.rt.ui.html</artifactId>
+		</dependency>		
+		<!-- font dependency -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>font-awesome</artifactId>
+			<version>4.7.0</version>
+		</dependency>
+	</dependencies>
+</project>

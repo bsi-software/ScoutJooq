@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
+	name="org.eclipse.scout.archetypes.jooq"
+	xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<requiredProperties>
+		<requiredProperty key="appName">
+			<defaultValue>Default Application Name</defaultValue>
+		</requiredProperty>
+		<requiredProperty key="javaVersion">
+			<defaultValue>1.8</defaultValue>
+		</requiredProperty>
+	</requiredProperties>
+	<modules>
+		<module id="${rootArtifactId}" dir="__rootArtifactId__" name="${rootArtifactId}">
+			<fileSets>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="shared" dir="__rootArtifactId__.shared" name="shared">
+			<fileSets>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+						<include>**/*.properties</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/test/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/test/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/generated/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>**/*.</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>**/*.</include>
+						<include>**/*.nls</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="database" dir="__rootArtifactId__.database" name="database">
+			<fileSets>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.png</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/test/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/generated/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>**/*.</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>**/*.</include>
+						<include>**/*.log</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="server" dir="__rootArtifactId__.server" name="server">
+			<fileSets>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/test/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/test/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="client" dir="__rootArtifactId__.client" name="client">
+			<fileSets>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.gif</include>
+						<include>**/*.png</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/test/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="docx4j" dir="__rootArtifactId__.docx4j" name="docx4j">
+			<fileSets>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="server.app.dev" dir="__rootArtifactId__.server.app.dev"
+			name="server.app.dev">
+			<fileSets>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+						<include>**/*.properties</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/webapp</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+						<include>[webapp] dev server.launch</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="ui.html" dir="__rootArtifactId__.ui.html" name="ui.html">
+			<fileSets>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+						<include>**/*.html</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>src/main/js</directory>
+					<includes>
+						<include>**/*.less</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.ico</include>
+						<include>**/*.ttf</include>
+						<include>**/*.png</include>
+						<include>**/*.js</include>
+						<include>**/*.json</include>
+						<include>**/*.less</include>
+						<include>**/*.woff</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="ui.html.app.dev" dir="__rootArtifactId__.ui.html.app.dev"
+			name="ui.html.app.dev">
+			<fileSets>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+						<include>**/*.properties</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/webapp</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+						<include>[webapp] dev ui.launch</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+		<module id="all.app.dev" dir="__rootArtifactId__.all.app.dev"
+			name="all.app.dev">
+			<fileSets>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.xml</include>
+						<include>**/*.properties</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory>src/main/webapp</directory>
+					<includes>
+						<include>**/*.xml</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory>.settings</directory>
+					<includes>
+						<include>**/*.prefs</include>
+					</includes>
+				</fileSet>
+				<fileSet filtered="true" encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.classpath</include>
+
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8">
+					<directory></directory>
+					<includes>
+						<include>.gitignore</include>
+						<include>[webapp] dev server + ui.launch</include>
+					</includes>
+				</fileSet>
+			</fileSets>
+		</module>
+	</modules>
+</archetype-descriptor>

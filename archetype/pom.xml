@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>maven-archetype</packaging>
+	<groupId>org.eclipse.scout.archetypes</groupId>
+	<artifactId>basic-application-template</artifactId>
+	<version>1.0.0</version>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-archetype-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.archetype</groupId>
+				<artifactId>archetype-packaging</artifactId>
+				<version>2.4</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<!-- primarily for license header generation -->
+	<inceptionYear>2017</inceptionYear>
+
+	<organization>
+		<name>Eclipse Scout Project</name>
+		<url>${project.url}</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Eclipse Public License v1.0</name>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+			<comments>All rights reserved.
+
+       This program and the accompanying materials are made
+       available under the terms of the Eclipse Public License v1.0
+       which accompanies this distribution, and is available at
+       http://www.eclipse.org/legal/epl-v10.htm</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>bsi</id>
+			<name>BSI Business Systems Integration AG</name>
+			<organization>BSI Business Systems Integration AG</organization>
+			<organizationUrl>https://www.bsi-software.com/en/technology/eclipse-scout.html</organizationUrl>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<name>scout-dev Mailing List</name>
+			<subscribe>https://dev.eclipse.org/mailman/listinfo/scout-dev</subscribe>
+			<unsubscribe>https://dev.eclipse.org/mailman/listinfo/scout-dev</unsubscribe>
+			<post>scout-dev@eclipse.org</post>
+			<archive>http://dev.eclipse.org/mhonarc/lists/scout-dev</archive>
+		</mailingList>
+	</mailingLists>
+</project>
