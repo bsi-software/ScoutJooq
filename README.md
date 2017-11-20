@@ -11,10 +11,12 @@ mvn clean install
 
 ```
 
-Once it is in your local catalog you can generate a project form it:
+Once it is in your local catalog you can generate a project from it:
 
 ```bash
-mvn archetype:generate -DarchetypeGroupId=org.eclipse.scout.archetypes -DarchetypeArtifactId= basic-application-template
+mvn archetype:generate \
+-DarchetypeGroupId=org.eclipse.scout.archetypes \
+-DarchetypeArtifactId=basic-application-template
 ```
 
 Properties used in the archetype
