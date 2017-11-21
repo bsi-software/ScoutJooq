@@ -24,7 +24,7 @@ public class InitializerApplication {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		return JooqGeneratorService.getConnection(GeneratorApplication.DB_MAPPING_NAME, "scout", "securePassw0rd");
+		return JooqGeneratorService.getConnection(GeneratorApplication.DB_MAPPING_NAME, GeneratorApplication.DB_USER, GeneratorApplication.DB_PASSWORD);
 	}
 
 	public static DSLContext getContext(Connection connection) {

@@ -18,7 +18,7 @@
 
   <filter>
     <filter-name>AuthFilter</filter-name>
-    <filter-class>${package}.${parentArtifactId}.server.ServerServletFilter</filter-class>
+    <filter-class>${package}.server.ServerServletFilter</filter-class>
     <init-param>
       <param-name>filter-exclude</param-name>
       <param-value>

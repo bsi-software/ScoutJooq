@@ -15,6 +15,6 @@ import org.eclipse.scout.rt.shared.services.common.text.AbstractDynamicNlsTextPr
 public class DefaultTextProviderService extends AbstractDynamicNlsTextProviderService {
 	@Override
 	public String getDynamicNlsBaseName() {
-		return "${package}.shared.texts.Texts";
+		return "texts.Texts";
 	}
 }

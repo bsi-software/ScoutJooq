@@ -4,6 +4,7 @@
 package ${package}.database.generator;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class InitializerApplication {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		return JooqGeneratorService.getConnection(GeneratorApplication.DB_MAPPING_NAME, "scout", "securePassw0rd");
+		return DriverManager.getConnection(GeneratorApplication.DB_MAPPING_NAME);
 	}
 
 	public static DSLContext getContext(Connection connection) {

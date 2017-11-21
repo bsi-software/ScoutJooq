@@ -36,11 +36,15 @@ public class ServerProperties {
 	public static final boolean DEFAULT_AUTOCREATE = true;
 	public static final boolean DEFAULT_AUTOPOPULATE = true;
 
-	public static final String DEFAULT_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	public static final SQLDialect DEFAULT_DIALECT = SQLDialect.DERBY;
-	public static final String DEFAULT_MAPPING = "jdbc:sqlserver://192.168.99.100:1433;DatabaseName=SCOUT";
-	public static final String DEFAULT_USERNAME = "SA";
-	public static final String DEFAULT_PASSWORD = "<YourStrong!Passw0rd>";
+	public static final String DEFAULT_DRIVER = "org.postgresql.Driver";
+	public static final SQLDialect DEFAULT_DIALECT = SQLDialect.POSTGRES_9_5;
+	
+	// TODO update DEFAULT_HOST according to your setup
+	public static final String DEFAULT_HOST = null;
+	public static final String GENERIC_HOST = "<DB-HOST-ADDRESS>";
+	public static final String DEFAULT_MAPPING = "jdbc:postgresql://" + ObjectUtility.nvl(DEFAULT_HOST, GENERIC_HOST) + ":5432/postgres";
+	public static final String DEFAULT_USERNAME = "postgres";
+	public static final String DEFAULT_PASSWORD = "securePassw0rd";
 	
 
 	public static class DriverProperty extends AbstractStringConfigProperty {
@@ -115,6 +119,14 @@ public class ServerProperties {
 
 		@Override
 		protected String getDefaultValue() {
+			if(DEFAULT_MAPPING.contains(GENERIC_HOST)) {
+			    System.err.println("Invalid default database mapping: '" + DEFAULT_MAPPING 
+			    		+ "'. Exiting. Update class ServerProperties or provide a valid value for '"
+			    		+ KEY_MAPPING 
+			    		+"' in the properties file");
+			    System.exit(-1);
+			}
+			
 			return DEFAULT_MAPPING;
 		}
 
