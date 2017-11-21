@@ -3,8 +3,7 @@ Scout jOOQ - Eclipse Scout Template Application using jOOQ for Persistence
 
 ## Usage
 
-The archetype is currently not deployed on any repository. You need to install it locally:
-
+The archetype is currently not deployed on any repository. To install it locally change into directory ```archetype``` and build it. 
 
 ```bash
 mvn clean install
@@ -16,13 +15,13 @@ Once it is in your local catalog you can generate a project from it:
 ```bash
 mvn archetype:generate \
 -DarchetypeGroupId=org.eclipse.scout.archetypes \
--DarchetypeArtifactId=basic-application-template
+-DarchetypeArtifactId=basic-application-template \
+-DartifactId=application
 ```
 
 Properties used in the archetype
 
 * groupId
-* artifactId
 * version
 * package
 * appName
@@ -30,7 +29,8 @@ Properties used in the archetype
 
 ## Post Generation Tasks
 
-All config.properties files need to be updated with proper security keys. These can be generated with the appropriate scout utilities
+* Update the field ```DEFAULT_HOST``` in class ```ServerProperties``` to match the address of your database host.
+* Update ```config.properties``` files need to be updated with proper security keys. These can be generated with the appropriate scout utilities
 
 ## Changing from Postgres to other Database
 
