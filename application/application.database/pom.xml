@@ -34,8 +34,8 @@
 			<groupId>org.jooq</groupId>
 			<artifactId>jooq</artifactId>
 		</dependency>
-		<dependency> 
- 			<groupId>org.jooq</groupId> 
+		<dependency>
+			<groupId>org.jooq</groupId>
 			<artifactId>jooq-meta</artifactId>
 		</dependency>
 		<dependency>
@@ -44,16 +44,16 @@
 		</dependency>
 
 		<!-- MS SQL Server -->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-		</dependency>
-
+		<!-- <dependency> -->
+		<!-- <groupId>com.microsoft.sqlserver</groupId> -->
+		<!-- <artifactId>mssql-jdbc</artifactId> -->
+		<!-- </dependency> -->
+	
 		<!-- Postgres -->
-		<dependency>
-    		<groupId>org.postgresql</groupId>
-    		<artifactId>postgresql</artifactId>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>org.postgresql</groupId> -->
+		<!-- <artifactId>postgresql</artifactId> -->
+		<!-- </dependency> -->
 		<!-- Derby DB -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -69,7 +69,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-		
+
 		<!-- TEST Dependencies -->
 		<dependency>
 			<groupId>org.eclipse.scout.rt</groupId>

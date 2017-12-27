@@ -32,10 +32,20 @@ Properties used in the archetype
 * Update the field ```DEFAULT_HOST``` in class ```ServerProperties``` to match the address of your database host.
 * Update ```config.properties``` files need to be updated with proper security keys. These can be generated with the appropriate scout utilities
 
-## Changing from Postgres to other Database
+## Immediately running after creation
+
+There is a derby DB configured that will run in-memory. This is not intended for production, but so the applicaiton is immediately executable without any further set up.
+
+## Changing from Derby / Postgres to other Database
 
 There are several tasks to be performed:
 
 1. Change the JOOQ Dialect and related items in the database project.
 2. Import an appropriate driver in the database project pom.
 3. Change config.properties files to use the correct jdbc string and driver name
+
+
+
+## Running the required postgres db
+
+docker run -it --name scoutJooqPg -e POSTGRES_PASSWORD=securePassw0rd -d postgres
