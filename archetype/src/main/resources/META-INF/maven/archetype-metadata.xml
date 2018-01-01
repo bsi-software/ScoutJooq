@@ -41,6 +41,15 @@
 						<include>**/*.xml</include>
 						<include>**/*.properties</include>
 					</includes>
+					<excludes>
+						<exclude>**/shared/**</exclude>
+					</excludes>
+				</fileSet>
+				<fileSet filtered="true" packaged="true" encoding="UTF-8">
+					<directory>src/main/resources/</directory>
+					<includes>
+						<include>**/shared/**</include>
+					</includes>
 				</fileSet>
 				<fileSet filtered="true" packaged="true" encoding="UTF-8">
 					<directory>src/test/java</directory>
@@ -194,12 +203,14 @@
 					<includes>
 						<include>**/*.xml</include>
 					</includes>
+					<excludes>
+						<exclude>**/client/**</exclude>
+					</excludes>
 				</fileSet>
-				<fileSet encoding="UTF-8">
-					<directory>src/main/resources</directory>
+				<fileSet filtered="false" packaged="true" encoding="UTF-8">
+					<directory>src/main/resources/</directory>
 					<includes>
-						<include>**/*.gif</include>
-						<include>**/*.png</include>
+						<include>**/client/**</include>
 					</includes>
 				</fileSet>
 				<fileSet filtered="true" encoding="UTF-8">
@@ -218,7 +229,6 @@
 					<directory></directory>
 					<includes>
 						<include>.classpath</include>
-
 					</includes>
 				</fileSet>
 				<fileSet encoding="UTF-8">
@@ -348,10 +358,11 @@
 						<include>**/*.html</include>
 					</includes>
 				</fileSet>
-				<fileSet encoding="UTF-8">
+				<fileSet encoding="UTF-8" filtered="true">
 					<directory>src/main/js</directory>
 					<includes>
 						<include>**/*.less</include>
+						<include>**/*.js</include>
 					</includes>
 				</fileSet>
 				<fileSet encoding="UTF-8">
@@ -360,10 +371,15 @@
 						<include>**/*.ico</include>
 						<include>**/*.ttf</include>
 						<include>**/*.png</include>
-						<include>**/*.js</include>
 						<include>**/*.json</include>
-						<include>**/*.less</include>
 						<include>**/*.woff</include>
+					</includes>
+				</fileSet>
+				<fileSet encoding="UTF-8" filtered="true">
+					<directory>src/main/resources</directory>
+					<includes>
+						<include>**/*.less</include>
+						<include>**/*.js</include>
 					</includes>
 				</fileSet>
 				<fileSet encoding="UTF-8">

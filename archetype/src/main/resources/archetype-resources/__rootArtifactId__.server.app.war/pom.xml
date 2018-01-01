@@ -1,3 +1,6 @@
+#set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
+#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,20 +11,14 @@
 		<groupId>${groupId}</groupId>
 		<artifactId>${rootArtifactId}</artifactId>
 	</parent>
-	<artifactId>${rootArtifactId}.${artifactId}</artifactId>
+	<artifactId>${rootArtifactId}.server.app.war</artifactId>
 	<packaging>war</packaging>
-	<name>${appName} Server Application</name>
+	<name>A Name Server Application</name>
 	<dependencies>		
 	<!-- Application Server -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>${rootArtifactId}.server</artifactId>
 		</dependency>				
-		<!-- Group A module -->				
-		<!-- Jetty -->
-		<dependency>
-			<groupId>org.eclipse.scout.rt</groupId>
-			<artifactId>org.eclipse.scout.dev.jetty</artifactId>
-		</dependency>
 	</dependencies>
 </project>

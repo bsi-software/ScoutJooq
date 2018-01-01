@@ -1,25 +1,34 @@
+#set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
+#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
-		<version>${version}</version>
-		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
 		<groupId>${groupId}</groupId>
 		<artifactId>${rootArtifactId}</artifactId>
+		<version>${version}</version>
+		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
 	</parent>
-	<artifactId>${rootArtifactId}.${artifactId}</artifactId>
+
+	<artifactId>${rootArtifactId}.docx4j</artifactId>
 	<name>Scout Docx4j Integration</name>
-	<dependencies>		
-	<!-- Scout framework -->
+
+	<dependencies>
+		<!-- Scout framework -->
 		<dependency>
 			<artifactId>org.eclipse.scout.rt.client</artifactId>
 			<groupId>org.eclipse.scout.rt</groupId>
-		</dependency>		
+		</dependency>
+
 		<!-- Docx4j -->
 		<dependency>
 			<groupId>org.docx4j</groupId>
 			<artifactId>docx4j</artifactId>
+			
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>

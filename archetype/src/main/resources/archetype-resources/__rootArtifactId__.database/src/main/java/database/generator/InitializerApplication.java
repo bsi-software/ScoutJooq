@@ -1,10 +1,9 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 package ${package}.database.generator;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class InitializerApplication {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(GeneratorApplication.DB_MAPPING_NAME);
+		return JooqGeneratorService.getConnection(GeneratorApplication.DB_MAPPING_NAME, GeneratorApplication.DB_USER, GeneratorApplication.DB_PASSWORD);
 	}
 
 	public static DSLContext getContext(Connection connection) {

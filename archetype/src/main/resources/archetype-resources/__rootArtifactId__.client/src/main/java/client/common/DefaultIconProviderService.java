@@ -17,6 +17,6 @@ import ${package}.client.ResourceBase;
 public class DefaultIconProviderService extends AbstractIconProviderService {
 	@Override
 	protected URL findResource(String relativePath) {
-		return ResourceBase.class.getResource("/icons/" + relativePath);
+		return ResourceBase.class.getResource("icons/" + relativePath);
 	}
 }

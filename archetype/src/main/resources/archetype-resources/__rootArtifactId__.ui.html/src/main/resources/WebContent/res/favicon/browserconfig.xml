@@ -1,9 +1,9 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="utf-8"?>
 <browserconfig>
-  <ms${parentArtifactId}>
+  <ms${rootArtifactId}>
     <tile>
       <square70x70logo src="res/favicon/mstile-70x70.png"/>
       <square150x150logo src="res/favicon/mstile-150x150.png"/>
@@ -11,5 +11,5 @@
       <wide310x150logo src="res/favicon/mstile-310x150.png"/>
       <TileColor>${symbol_pound}da532c</TileColor>
     </tile>
-  </ms${parentArtifactId}>
+  </ms${rootArtifactId}>
 </browserconfig>

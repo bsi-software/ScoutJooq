@@ -1,5 +1,5 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 package ${package}.shared.text;
 
@@ -15,6 +15,6 @@ import org.eclipse.scout.rt.shared.services.common.text.AbstractDynamicNlsTextPr
 public class DefaultTextProviderService extends AbstractDynamicNlsTextProviderService {
 	@Override
 	public String getDynamicNlsBaseName() {
-		return "texts.Texts";
+		return "${package}.shared.texts.Texts";
 	}
 }

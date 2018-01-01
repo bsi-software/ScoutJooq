@@ -1,17 +1,25 @@
+#set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
+#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
-		<version>${version}</version>
-		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
 		<groupId>${groupId}</groupId>
 		<artifactId>${rootArtifactId}</artifactId>
+		<version>${version}</version>
+		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
 	</parent>
-	<artifactId>${rootArtifactId}.${artifactId}</artifactId>
+
+	<artifactId>${rootArtifactId}.server</artifactId>
+
 	<name>${appName} Server</name>
-	<dependencies>		
-	<!-- application dependencies -->
+
+	<dependencies>
+		<!-- ${rootArtifactId} dependencies -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>${rootArtifactId}.database</artifactId>
@@ -19,7 +27,8 @@
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>${rootArtifactId}.shared</artifactId>
-		</dependency>		
+		</dependency>
+
 		<!-- framework dependencies -->
 		<dependency>
 			<artifactId>org.eclipse.scout.rt.server</artifactId>
@@ -28,7 +37,8 @@
 		<dependency>
 			<groupId>org.eclipse.scout.rt</groupId>
 			<artifactId>org.eclipse.scout.rt.server.jdbc</artifactId>
-		</dependency>		
+		</dependency>
+
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>org.eclipse.scout.rt</groupId>

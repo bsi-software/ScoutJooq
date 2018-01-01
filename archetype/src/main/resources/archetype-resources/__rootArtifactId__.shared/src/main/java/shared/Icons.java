@@ -1,5 +1,5 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 package ${package}.shared;
 
@@ -16,5 +16,5 @@ public class Icons extends AbstractIcons {
 
 	public static final String Scout = "eclipse_scout";
 	public static final String User = "user";
-	public static final String AppLogo = "${parentArtifactId}_logo";
+	public static final String AppLogo = "application_logo";
 }

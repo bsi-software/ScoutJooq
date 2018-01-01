@@ -1,4 +1,7 @@
-# This file is maintained by the NLS editor.  #
-# To ensure a properly working NLS support    #
-# keep this file untouched.                   #
-Nls-Class=${groupId}.${rootArtifactId}.shared.text.DefaultTextProviderService
+#set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
+#set( $symbol_escape = '\' )
+${symbol_pound} This file is maintained by the NLS editor.  ${symbol_pound}
+${symbol_pound} To ensure a properly working NLS support    ${symbol_pound}
+${symbol_pound} keep this file untouched.                   ${symbol_pound}
+Nls-Class=${package}.shared.text.DefaultTextProviderService

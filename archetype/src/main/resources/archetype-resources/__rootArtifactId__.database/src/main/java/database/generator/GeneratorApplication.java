@@ -1,5 +1,5 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 package ${package}.database.generator;
 
@@ -33,10 +33,12 @@ public class GeneratorApplication {
 	public static final String OUTPUT_DIRECTORY = "src/generated/java";
 	public static final String OUTPUT_PACKAGE = "${package}.database.or";
 
-	public static final String DB_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-	public static final String DB_MAPPING_NAME = "jdbc:derby:memory:generate-or-database;create=true";
-	public static final String DB_JOOQ_NAME = "org.jooq.util.derby.DerbyDatabase";
-	public static final SQLDialect DB_DIALECT = SQLDialect.DERBY; 
+	public static final String DB_USER = "postgres";
+	public static final String DB_PASSWORD = "securePassw0rd";
+	public static final String DB_DRIVER = "org.postgresql.Driver";
+	public static final String DB_MAPPING_NAME = "jdbc:postgresql://192.168.99.100:5432/postgres";
+	public static final String DB_JOOQ_NAME = "org.jooq.util.postgres.PostgresDatabase";
+	public static final SQLDialect DB_DIALECT = SQLDialect.POSTGRES_9_5; 
 	
 	// TODO ask how to do this for uuid, does not seem to work (using workaround with varchar(46) for id columns now
 	private static final String CONVERTER_DATE = "${package}.database.generator.converter.DateConverter";
@@ -140,7 +142,7 @@ public class GeneratorApplication {
 
 		@Override
 		public void run(Configuration jaxbConfiguration) throws Exception {
-			try (Connection connection = DriverManager.getConnection(DB_MAPPING_NAME))  {
+			try (Connection connection = DriverManager.getConnection(DB_MAPPING_NAME, DB_USER, DB_PASSWORD))  {
 				GeneratorApplication.setupDatabase(new DefaultDSLContext(connection, DB_DIALECT));
 				setConnection(connection);
 				super.run(jaxbConfiguration);

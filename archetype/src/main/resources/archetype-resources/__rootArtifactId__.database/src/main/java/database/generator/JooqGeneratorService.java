@@ -1,5 +1,5 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 package ${package}.database.generator;
 
@@ -21,7 +21,7 @@ public class JooqGeneratorService {
 
 	/**
 	 * Returns a DSL context for the provided parameters.
-	 * WARNING: Do not use this method in the ${parentArtifactId}. It is intended for testing/debugging only. 
+	 * WARNING: Do not use this method in the application. It is intended for testing/debugging only. 
 	 */
 	public static DSLContext generateContext(String jdbcMappingName, SQLDialect dialect, String username, String password) {
 		LOG.error("Method generateContext() is not intended for productive usage.");

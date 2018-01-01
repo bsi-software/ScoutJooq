@@ -1,5 +1,5 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 /*******************************************************************************
  * Copyright (c) 2013 BSI Business Systems Integration AG.

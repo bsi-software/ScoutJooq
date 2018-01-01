@@ -1,0 +1,621 @@
+/*
+ * Copyright (c) BSI Business Systems Integration AG. All rights reserved.
+ * http://www.bsiag.com/
+ */
+package com.bsiag.crm.commons.archetype;
+
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.eclipse.scout.rt.platform.util.CollectionUtility;
+import org.hamcrest.CoreMatchers;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+
+public class ArchetypeSyncTest {
+
+  private final static List<ReplaceRule> JAVA_REPLACE_RULES = Collections.unmodifiableList(Arrays.asList(
+      new P_SymbolReplaceRule("$", "symbol_dollar"),
+      new P_SymbolReplaceRule("#", "symbol_pound"),
+      new P_SymbolReplaceRule("\\", "symbol_escape"),
+      new P_PatternReplaceRule(Pattern.compile("com\\.bsiag\\.bsicrm"), "\\${package}"),
+      new P_PatternReplaceRule(Pattern.compile("(\\W(I)?)Bsicrm(\\w)"), "$1\\${classPrefix}$3"),
+      new P_PatternReplaceRule(Pattern.compile("\"Bsicrm\""), "\"\\${classPrefix}\""),
+      new P_PatternReplaceRule(Pattern.compile("\\{archetype-task\\}"), "\\${task}")));
+
+  private final static List<ReplaceRule> REPLACE_RULES = Collections.unmodifiableList(Arrays.asList(
+      new P_SymbolReplaceRule("$", "symbol_dollar"),
+      new P_SymbolReplaceRule("#", "symbol_pound"),
+      new P_SymbolReplaceRule("\\", "symbol_escape"),
+      new P_PatternReplaceRule(Pattern.compile("com\\.bsiag\\.bsicrm"), "\\${groupId}"),
+      new P_PatternReplaceRule(Pattern.compile("16.0.0-SNAPSHOT"), "\\${version}")));
+
+  private final static List<ReplaceRule> DIRECTORY_TRANSFORM_RULES = Collections.unmodifiableList(Arrays.<ReplaceRule> asList(
+      new P_PatternReplaceRule(Pattern.compile("/java/com/bsiag/bsicrm/"), "/java/")
+
+  ));
+
+  private final static List<ReplaceRule> FILE_NAME_TRANSFORM_RULES = Collections.unmodifiableList(Arrays.<ReplaceRule> asList(
+      new P_PatternReplaceRule(Pattern.compile("^(I)?Bsicrm(.*\\.(java|xml))$"), "$1__classPrefix__$2")));
+
+  private static final String BSICRM_MODULE_PREFIX = "com.bsiag.bsicrm.";
+  private static final String ARCHETYPE_MODULE_PREFIX = "__groupId__.";
+  private static final String SRC_MAIN_JAVA = "src/main/java";
+  private static final String SRC_TEST_JAVA = "src/test/java";
+
+  private static Path s_workspacePath;
+  private static Path s_archetypeWorkPath;
+
+  @Rule
+  public final ErrorCollector m_collector = new ErrorCollector();
+
+  @BeforeClass
+  public static void beforeClass() throws Exception {
+    URL location = ArchetypeSyncTest.class.getProtectionDomain().getCodeSource().getLocation();
+    assertTrue(String.format("not a file location (%s)", location), "file".equalsIgnoreCase(location.getProtocol()));
+
+    s_workspacePath = Paths.get(location.toURI()).getParent().getParent().getParent();
+    assertTrue(String.format("Directory (%s) does not exist.", location), s_workspacePath.toFile().exists());
+
+    s_archetypeWorkPath = s_workspacePath.resolve("archetype-crm/src/main/resources/archetype-resources");
+    assertTrue(String.format("Directory (%s) does not exist.", location), s_archetypeWorkPath.toFile().exists());
+  }
+
+  @Test
+  public void testClientFilesInSync() throws Exception {
+    syncJavaFiles("client",
+        "com.bsiag.bsicrm.client.IBsicrmClientSession",
+        "com.bsiag.bsicrm.client.BsicrmClientSession");
+
+    syncModuleSettings("client");
+  }
+
+  @Test
+  public void testClientTestFilesInSync() throws Exception {
+    syncTestJavaFiles("client.test",
+        "com.bsiag.bsicrm.client.BsicrmClientStandardTestsCompletenessTest",
+        "com.bsiag.bsicrm.client.BsicrmClientTestEnvironmentTest",
+        "com.bsiag.bsicrm.client.BsicrmFormTestsCompletenessTest",
+        "com.bsiag.bsicrm.client.BsicrmTablePageTestsCompletenessTest"
+    // "com.bsiag.bsicrm.client.BsicrmLookupCallCompletenessTest", no bsiit
+    // "com.bsiag.bsicrm.client.BsicrmTimemachineTestsCompletenessTest", no ticket extension
+    );
+
+    syncTestJavaDirectories("client.test",
+        "annotation",
+        "test");
+
+    syncModuleSettings("client.test");
+  }
+
+  @Test
+  public void testDbMigrationFilesInSync() throws Exception {
+    syncJavaFiles("db.migration",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadAddressElectronic",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadAddressPostal",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadCity",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadCompany",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadCompanyAdvisor",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadCompanyPerson",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadLegalEntityInterest",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadPerson",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXBadPersonAdvisor",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1AddressElectronic",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1AddressPostal",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1City",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1Company",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1CompanyAdvisor",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1CompanyPerson",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1LegalEntityInterest",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1Person",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS1PersonAdvisor",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2AddressElectronic",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2AddressPostal",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2City",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2Company",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2CompanyAdvisor",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2CompanyPerson",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2LegalEntityInterest",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2Person",
+        "com.bsiag.bsicrm.db.migration.create.CreateTableBsiXS2PersonAdvisor",
+
+        // "com.bsiag.bsicrm.db.migration.schema.insurance.BsicrmInitInsurance",
+
+        // "com.bsiag.bsicrm.db.migration.schema.test.BsicrmInitBasePermissionsForTest", no candidacy
+        // "com.bsiag.bsicrm.db.migration.schema.test.BsicrmTestCreateDatabaseSchema", no bsiit
+        "com.bsiag.bsicrm.db.migration.schema.test.BsicrmTestDatabaseSchemaObjectProvider",
+        "com.bsiag.bsicrm.db.migration.schema.test.BsicrmTestInitCompletion"
+    // "com.bsiag.bsicrm.db.migration.schema.test.BsicrmTestInitGroupwareAccounts",
+    // "com.bsiag.bsicrm.db.migration.schema.test.BsicrmTestInitBaseData",
+
+    // "com.bsiag.bsicrm.db.migration.schema.BsicrmCreateDatabaseSchema", no bsiit
+    // "com.bsiag.bsicrm.db.migration.schema.BsicrmDatabaseSchemaObjectProvider", different tables
+    // "com.bsiag.bsicrm.db.migration.schema.BsicrmInitBaseData",
+    // "com.bsiag.bsicrm.db.migration.schema.BsicrmInitBasePermissions", no default permissions
+    // "com.bsiag.bsicrm.db.migration.schema.BsicrmInitRoles", no default roles
+    // "com.bsiag.bsicrm.db.migration.schema.DBConstantsEx",
+    // "com.bsiag.bsicrm.db.migration.schema.TestSetupDatabaseMigration"
+    );
+
+    syncJavaDirectories("db.migration", "log");
+
+    syncModuleSettings("db.migration");
+  }
+
+  @Test
+  public void testDbMigrationTestFilesInSync() throws Exception {
+    syncTestJavaFiles("db.migration.test",
+        // "com.bsiag.bsicrm.db.migration.test.BsicrmDevRunnable",
+        "com.bsiag.bsicrm.db.migration.test.BsicrmNullDatabaseMigration",
+        "com.bsiag.bsicrm.db.migration.test.postgresql.PostgreSqlCompatibilityTest");
+
+    syncModuleSettings("db.migration.test");
+  }
+
+  @Test
+  public void testServerFilesInSync() throws Exception {
+    syncJavaFiles("server",
+        "com.bsiag.bsicrm.server.BsicrmServerApplication",
+        "com.bsiag.bsicrm.server.BsicrmServerServletFilter",
+        "com.bsiag.bsicrm.server.BsicrmServerSession",
+        "com.bsiag.bsicrm.server.IBsicrmServerSession",
+        "com.bsiag.bsicrm.server.BsicrmServerSession",
+        // "com.bsiag.bsicrm.server.persistence.BsicrmBinds", no lunch
+        "com.bsiag.bsicrm.server.domain.BsicrmServerDomainInitializer",
+        "com.bsiag.bsicrm.server.common.monitoring.BsicrmJobServerDomain");
+
+    syncJavaDirectories("server", "etl");
+
+    syncModuleSettings("server");
+    syncModuleSettings("server.app.dev");
+    syncModuleSettings("server.app.war");
+  }
+
+  @Test
+  public void testServerTestFilesInSync() throws Exception {
+    syncJavaFiles("server.test",
+        "com.bsiag.bsicrm.server.test.BsicrmServerTestSession",
+        "com.bsiag.bsicrm.server.test.generator.EtlDescriptorGenerator");
+
+    syncTestJavaFiles("server.test",
+        "com.bsiag.bsicrm.server.BsicrmLookupServiceTestsCompletenessTest",
+        "com.bsiag.bsicrm.server.BsicrmServerInteractiveTest",
+        "com.bsiag.bsicrm.server.BsicrmServerStandardTestsCompletenessTest",
+        "com.bsiag.bsicrm.server.BsicrmServerTestApplication",
+        "com.bsiag.bsicrm.server.configuration.code.BsicrmCodeTypeStructureTest",
+        "com.bsiag.bsicrm.server.datamodel.spider.BsicrmDataModelSpiderTestCompletenessTest",
+        // "com.bsiag.bsicrm.server.persistence.BsicrmLogicalDataModelNamingTest",
+        "com.bsiag.bsicrm.server.persistence.BsicrmPhysicalDataModelNamingTest",
+        // "com.bsiag.bsicrm.server.persistence.BsicrmSchemaValidatorTest", no bsiit
+        "com.bsiag.bsicrm.server.persistence.JPAEntityRegistrationTest",
+        "com.bsiag.bsicrm.server.persistence.RowLevelDefinitionTest",
+        "com.bsiag.bsicrm.server.persistence.StaticFinderOnTableTest");
+
+    syncTestJavaDirectories("server.test",
+        "annotation",
+        // "common", no bsiit permission / no permission description text service
+        // "configuration", no bsiit
+        // "db", no stored procedure
+        "domain",
+        "etl",
+        // "persistence",
+        // "scheduler", because __classPrefix__JobStructureTest.java is out of sync due to exclusion of BsicrmDataQualityDuplicateDetectionJob
+        "report");
+
+    syncModuleSettings("server.test");
+    syncModuleSettings("server.test.app.dev");
+    syncModuleSettings("server.test.app.war");
+    syncModuleSettings("server.test.codeexport");
+  }
+
+  @Test
+  public void testSharedFilesInSync() throws Exception {
+    syncJavaFiles("shared",
+        "com.bsiag.bsicrm.shared.configuration.sourcesystem.BsicrmSourceSystemCodeType",
+        "com.bsiag.bsicrm.shared.configuration.code.BsicrmPartitionCodeType"
+    // "com.bsiag.bsicrm.shared.common.text.BsicrmTextProviderService" no company test provider service
+    );
+
+    syncJavaDirectories("shared", "common/session");
+
+    syncModuleSettings("shared");
+  }
+
+  @Test
+  public void testSharedTestFilesInSync() throws Exception {
+    syncTestJavaDirectories("shared.test", ".");
+    syncJavaDirectories("shared.test", "generator");
+
+    syncModuleSettings("shared.test");
+  }
+
+  @Test
+  public void testUiFilesInSync() throws Exception {
+    syncJavaDirectories("ui.html", ".");
+
+    syncModuleSettings("ui.html");
+    syncModuleSettings("ui.html.app.dev");
+    syncModuleSettings("ui.html.app.war");
+  }
+
+  @Test
+  public void testMigrationAppInSync() throws Exception {
+    syncModule("migration.app.client");
+    syncModule("migration.app.parent");
+    syncModule("migration.app.server");
+    syncModule("migration.app.server.headless",
+        CollectionUtility.<String> arrayList(
+            "pom.xml", // exclude because of db dependency
+            "/config/",
+            ".launch"),
+        CollectionUtility.<String> arrayList(
+            "migration.cmd",
+            "migration.sh"));
+    syncModule("migration.app.shared");
+    syncModule("migration.app.ui.html",
+        CollectionUtility.<String> arrayList(
+            "pom.xml", // exclude because of db dependency
+            "/config/",
+            ".launch"),
+        CollectionUtility.<String> arrayList(
+            "/scripts/",
+            "/.jshintrc",
+            "/WebContent/res/"));
+  }
+
+  @Test
+  public void testSearchInSync() throws Exception {
+    syncModule("bsisearch");
+    syncModule("bsisearch.app.dev",
+        CollectionUtility.<String> arrayList(
+            "pom.xml", // exclude because of
+            "/config.properties", // exclude because of db
+            "indexdata/",
+            ".gitignore",
+            ".launch"),
+        CollectionUtility.<String> arrayList(
+            "migration.cmd",
+            "migration.sh"));
+
+    syncModuleSettings("bsisearch.app.war"); // many diffs
+    syncModuleSettings("bsisearch.test"); // many diffs
+
+    syncModule("bsisearch.test.app.dev",
+        CollectionUtility.<String> arrayList(
+            "/config.properties", // exclude because of db
+            "indexdata/",
+            ".gitignore",
+            ".launch"),
+        CollectionUtility.<String> arrayList());
+    syncModule("bsisearch.test.app.war",
+        CollectionUtility.<String> arrayList(
+            "/config.properties"),
+        CollectionUtility.<String> arrayList());
+  }
+
+  @Test
+  public void testOtherModulesInSync() throws Exception {
+    syncModuleSettings("db");
+    syncModuleSettings("parent");
+  }
+
+  // ----------------------------------------------
+  // --------------------- impl -------------------
+  // ----------------------------------------------
+
+  private void syncModule(String module) throws Exception {
+    syncModule(module, Collections.<String> emptyList(), Collections.<String> emptyList());
+  }
+
+  private void syncModule(String module, List<String> ignoredPaths, List<String> nonFilteredPaths) throws Exception {
+    Path fromDir = s_workspacePath.resolve(BSICRM_MODULE_PREFIX + module);
+    Path toDir = s_archetypeWorkPath.resolve(ARCHETYPE_MODULE_PREFIX + module);
+
+    List<String> allIgnoredPaths = CollectionUtility.arrayList(
+        ".classpath",
+        ".flattened-pom.xml",
+        ".project",
+        "/target/",
+        ".settings/org.eclipse.jdt.core.prefs", // java 1.7 - 1.8
+        ".settings/org.sonarlint.eclipse.core.prefs");
+    allIgnoredPaths.addAll(ignoredPaths);
+
+    List<String> allNonFilteredPaths = CollectionUtility.arrayList(
+        "/.settings/",
+        "META-INF/scout.xml");
+    allNonFilteredPaths.addAll(nonFilteredPaths);
+
+    syncDirectory(fromDir, toDir, false,
+        allIgnoredPaths,
+        allNonFilteredPaths,
+        CollectionUtility.<ReplaceRule> arrayList(
+            new P_PatternReplaceRule(Pattern.compile("^  <artifactId>\\$\\{groupId\\}\\." + module.replace(".", "\\.")), "  <artifactId>\\${groupId}.\\${artifactId}")));
+  }
+
+  private void syncModuleSettings(String module) throws IOException {
+    Path fromDir = s_workspacePath.resolve(BSICRM_MODULE_PREFIX + module).resolve(".settings");
+    Path toDir = s_archetypeWorkPath.resolve(ARCHETYPE_MODULE_PREFIX + module).resolve(".settings");
+
+    syncDirectory(fromDir, toDir, false,
+        CollectionUtility.arrayList(
+            "bsi-sdk.xml",
+            "org.eclipse.jdt.core.prefs", // java 1.7 - 1.8
+            "org.sonarlint.eclipse.core.prefs"),
+        CollectionUtility.arrayList("/"),
+        Collections.<ReplaceRule> emptyList());
+  }
+
+  private void syncTestJavaFiles(String module, String... fqcns) {
+    syncJavaFilesInteral(module, SRC_TEST_JAVA, fqcns);
+  }
+
+  private void syncTestJavaDirectories(String module, String... directories) throws IOException {
+    syncJavaDirectoriesInteral(module, module.replace(".test", ""), SRC_TEST_JAVA, directories);
+  }
+
+  private void syncJavaFiles(String module, String... fqcns) {
+    syncJavaFilesInteral(module, SRC_MAIN_JAVA, fqcns);
+  }
+
+  private void syncJavaDirectories(String module, String... directories) throws IOException {
+    syncJavaDirectoriesInteral(module, module, SRC_MAIN_JAVA, directories);
+  }
+
+  private void syncJavaFilesInteral(String module, String sourceDir, String... fqcns) {
+    Path fromJavaSourcePath = s_workspacePath.resolve(BSICRM_MODULE_PREFIX + module).resolve(sourceDir);
+    Path toJavaSourcePath = s_archetypeWorkPath.resolve(ARCHETYPE_MODULE_PREFIX + module).resolve(sourceDir);
+
+    for (String fqcn : fqcns) {
+      syncJavaFile(fromJavaSourcePath, toJavaSourcePath, fqcn);
+    }
+  }
+
+  private void syncJavaDirectoriesInteral(String module, String modulePackage, String sourceDir, String... directories) throws IOException {
+    Path fromJavaSourcePath = s_workspacePath.resolve(BSICRM_MODULE_PREFIX + module).resolve(sourceDir);
+    Path toJavaSourcePath = s_archetypeWorkPath.resolve(ARCHETYPE_MODULE_PREFIX + module).resolve(sourceDir);
+    Path fromDirPath = fromJavaSourcePath.resolve((BSICRM_MODULE_PREFIX + modulePackage).replace(".", "/"));
+    Path toDirPath = toJavaSourcePath.resolve(modulePackage.replace(".", "/"));
+
+    for (String directory : directories) {
+      syncDirectory(fromDirPath.resolve(directory), toDirPath.resolve(directory), true);
+    }
+  }
+
+  private void syncJavaFile(Path fromJavaSourcePath, Path toJavaSourcePath, String fqcn) {
+    Path fromPath = fromJavaSourcePath.resolve(fqcn.replace(".", "/") + ".java");
+    Path toPath = toJavaSourcePath.resolve(fqcn.replace(BSICRM_MODULE_PREFIX, "").replace(".", "/") + ".java");
+
+    syncFile(fromPath, toPath, JAVA_REPLACE_RULES);
+  }
+
+  private void syncDirectory(final Path fromDir, final Path toDir, boolean allowNotExisting) throws IOException {
+    syncDirectory(fromDir, toDir, allowNotExisting, Collections.<String> emptyList(), Collections.<String> emptyList(), Collections.<ReplaceRule> emptyList());
+  }
+
+  private void syncDirectory(final Path fromDir, final Path toDir, boolean allowNotExisting, final List<String> ignoredPaths, final List<String> nonFilteredPaths, List<ReplaceRule> additionalReplaceRules) throws IOException {
+    assertTrue(String.format("Direcotry (%s) does not exist.", fromDir), fromDir.toFile().exists());
+
+    List<ReplaceRule> list = new ArrayList<>(JAVA_REPLACE_RULES);
+    list.addAll(additionalReplaceRules);
+    final List<ReplaceRule> javaReplaceRules = Collections.unmodifiableList(list);
+    list = new ArrayList<>(REPLACE_RULES);
+    list.addAll(additionalReplaceRules);
+    final List<ReplaceRule> otherReplaceRules = Collections.unmodifiableList(list);
+
+    final Set<Path> syncedFiles = new HashSet<>();
+
+    Files.walkFileTree(fromDir, new SimpleFileVisitor<Path>() {
+
+      @Override
+      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        if (pathMatches(dir, ignoredPaths)) {
+          return FileVisitResult.SKIP_SUBTREE;
+        }
+        return super.preVisitDirectory(dir, attrs);
+      }
+
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        Path toPath = toDir.resolve(transformTargetDirectory(fromDir.relativize(file)));
+
+        if (!pathMatches(toPath, ignoredPaths)) {
+          if (pathMatches(toPath, nonFilteredPaths)) {
+            copyFile(file, toPath);
+          }
+          else {
+            List<ReplaceRule> replaceRules = file.getFileName().toString().endsWith(".java") ? javaReplaceRules : otherReplaceRules;
+            syncFile(file, toPath, replaceRules);
+          }
+        }
+        syncedFiles.add(toPath);
+        return super.visitFile(file, attrs);
+      }
+    });
+
+    if (!allowNotExisting) {
+      for (Iterator<Path> iterator = toDir.iterator(); iterator.hasNext();) {
+        Path path = iterator.next();
+        if (path.toFile().isFile()) {
+          m_collector.checkThat(String.format("File (%s) should not exist.", path), syncedFiles.contains(path), CoreMatchers.is(true));
+        }
+      }
+    }
+  }
+
+  private boolean pathMatches(Path path, List<String> patterns) {
+    String pathString = path.toUri().toString();
+    for (String pattern : patterns) {
+      if (pathString.contains(pattern)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void copyFile(Path fromPath, Path toPath) {
+    try {
+      boolean filesEqual = toPath.toFile().exists() && Arrays.equals(Files.readAllBytes(fromPath), Files.readAllBytes(toPath));
+      if (!filesEqual) {
+        Files.copy(fromPath, toPath, StandardCopyOption.REPLACE_EXISTING);
+        fail("File " + toPath + " is not in sync");
+      }
+    }
+    catch (Throwable t) {
+      m_collector.addError(t);
+    }
+  }
+
+  private void syncFile(Path fromPath, Path toPath, List<ReplaceRule> replaceRules) {
+    try {
+      syncFileInternal(fromPath, transformTargetFileName(toPath), replaceRules);
+    }
+    catch (Throwable t) {
+      m_collector.addError(t);
+    }
+  }
+
+  private Path transformTargetDirectory(Path relativeFromPath) {
+    String pathString = relativeFromPath.toString().replace(File.separatorChar, '/');
+
+    for (ReplaceRule replaceRule : DIRECTORY_TRANSFORM_RULES) {
+      pathString = replaceRule.apply(pathString);
+    }
+
+    return Paths.get(pathString);
+  }
+
+  private Path transformTargetFileName(Path toPath) {
+    String fileName = toPath.getFileName().toString();
+
+    for (ReplaceRule replaceRule : FILE_NAME_TRANSFORM_RULES) {
+      fileName = replaceRule.apply(fileName);
+    }
+
+    return toPath.getParent().resolve(fileName);
+  }
+
+  private void syncFileInternal(Path fromPath, Path toPath, List<ReplaceRule> replaceRules) throws IOException {
+    assertTrue(String.format("File (%s) does not exist.", fromPath), fromPath.toFile().exists());
+    Charset charset = StandardCharsets.UTF_8; // default workspace setting
+
+    List<String> newLines = new ArrayList<>();
+    appendPreamble(newLines, replaceRules);
+    try (BufferedReader reader = Files.newBufferedReader(fromPath, charset)) {
+      String line = reader.readLine();
+      while (line != null) {
+        newLines.add(applyReplaceRules(line, replaceRules));
+        line = reader.readLine();
+      }
+    }
+
+    List<String> currentLines;
+    if (toPath.toFile().exists()) {
+      currentLines = Files.readAllLines(toPath, charset);
+    }
+    else {
+      currentLines = new ArrayList<>();
+    }
+
+    toPath.getParent().toFile().mkdirs();
+    // write lines (not using Files.write as it uses wrong line separator)
+    OutputStream out = Files.newOutputStream(toPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, charset))) {
+      for (CharSequence line : newLines) {
+        writer.append(line);
+        writer.append("\n");
+      }
+    }
+
+    // not using assertEquals as it prints all lines
+    assertTrue("File " + toPath + " is not in sync", newLines.equals(currentLines));
+  }
+
+  private String applyReplaceRules(String line, List<ReplaceRule> replaceRules) {
+    for (ReplaceRule replaceRule : replaceRules) {
+      line = replaceRule.apply(line);
+    }
+    return line;
+  }
+
+  private void appendPreamble(List<String> collector, List<ReplaceRule> replaceRules) {
+    for (ReplaceRule replaceRule : replaceRules) {
+      replaceRule.appendPreamble(collector);
+    }
+  }
+
+  interface ReplaceRule {
+
+    void appendPreamble(List<String> collector);
+
+    String apply(String input);
+  }
+
+  private static class P_SymbolReplaceRule implements ReplaceRule {
+    private final String m_symbol;
+    private final String m_replacement;
+    private final String m_replacementInternal;
+
+    public P_SymbolReplaceRule(String symbol, String replacement) {
+      m_symbol = symbol;
+      m_replacement = replacement;
+      m_replacementInternal = "${" + replacement + "}";
+    }
+
+    @Override
+    public void appendPreamble(List<String> collector) {
+      collector.add("#set( $" + m_replacement + " = '" + m_symbol + "' )");
+    }
+
+    @Override
+    public String apply(String input) {
+      return input.replace(m_symbol, m_replacementInternal);
+    }
+  }
+
+  private static class P_PatternReplaceRule implements ReplaceRule {
+    private final Pattern m_pattern;
+    private final String m_replacement;
+
+    public P_PatternReplaceRule(Pattern pattern, String replacement) {
+      m_pattern = pattern;
+      m_replacement = replacement;
+    }
+
+    @Override
+    public void appendPreamble(List<String> collector) {
+      // nop
+    }
+
+    @Override
+    public String apply(String input) {
+      return m_pattern.matcher(input).replaceAll(m_replacement);
+    }
+  }
+}

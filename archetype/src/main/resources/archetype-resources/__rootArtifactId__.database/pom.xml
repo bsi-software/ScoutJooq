@@ -1,26 +1,37 @@
+#set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
+#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
-		<version>${version}</version>
-		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
 		<groupId>${groupId}</groupId>
 		<artifactId>${rootArtifactId}</artifactId>
+		<version>${version}</version>
+		<relativePath>../${rootArtifactId}/pom.xml</relativePath>
 	</parent>
-	<artifactId>${rootArtifactId}.${artifactId}</artifactId>
+
+	<artifactId>${rootArtifactId}.database</artifactId>
 	<name>${appName} Database / OR Mapper</name>
+
 	<dependencies>
-		<!-- application dependencies -->
+		<!-- ${rootArtifactId} dependencies -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>${rootArtifactId}.shared</artifactId>
 		</dependency>
+
+		<!-- ${rootArtifactId} dependencies -->
+
 		<!-- Scout framework -->
 		<dependency>
 			<groupId>org.eclipse.scout.rt</groupId>
 			<artifactId>org.eclipse.scout.rt.platform</artifactId>
 		</dependency>
+
 		<!-- JOOQ library -->
 		<dependency>
 			<groupId>org.jooq</groupId>
@@ -34,21 +45,24 @@
 			<groupId>org.jooq</groupId>
 			<artifactId>jooq-codegen</artifactId>
 		</dependency>
+
 		<!-- MS SQL Server -->
 		<!-- <dependency> -->
 		<!-- <groupId>com.microsoft.sqlserver</groupId> -->
 		<!-- <artifactId>mssql-jdbc</artifactId> -->
 		<!-- </dependency> -->
+	
 		<!-- Postgres -->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>org.postgresql</groupId> -->
+		<!-- <artifactId>postgresql</artifactId> -->
+		<!-- </dependency> -->
 		<!-- Derby DB -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 		</dependency>
+
 		<!-- LOGGING -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -58,6 +72,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
+
 		<!-- TEST Dependencies -->
 		<dependency>
 			<groupId>org.eclipse.scout.rt</groupId>

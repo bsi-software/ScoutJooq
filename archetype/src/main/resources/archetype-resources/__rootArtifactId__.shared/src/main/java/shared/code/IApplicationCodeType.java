@@ -1,5 +1,5 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 package ${package}.shared.code;
 
@@ -14,7 +14,7 @@ public interface IApplicationCodeType extends ICodeType<String, String> {
 	abstract Class<? extends IApplicationCodeType> getCodeTypeClass();
 	
 	/**
-	 * Returns true iff codes of this code type might be managed dynamically by the ${parentArtifactId}.
+	 * Returns true iff codes of this code type might be managed dynamically by the application.
 	 */
 	boolean isDynamic();
 	

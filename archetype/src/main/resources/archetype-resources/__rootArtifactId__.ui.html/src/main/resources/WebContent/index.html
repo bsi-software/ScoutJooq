@@ -1,15 +1,15 @@
-#set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
+#set( $symbol_pound = '#' )
 #set( $symbol_escape = '\' )
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Scout Template Application</title>
+    <title>${appName}</title>
     <scout:include template="head.html" />
-    <scout:stylesheet src="res/${parentArtifactId}-all-macro.less" />
+    <scout:stylesheet src="res/${rootArtifactId}-all-macro.less" />
     <scout:script src="res/jquery-all-macro.js" />
-    <scout:script src="res/${parentArtifactId}-all-macro.js" />
+    <scout:script src="res/${rootArtifactId}-all-macro.js" />
     <scout:script src="res/index.js" />
   </head>
   <body>
