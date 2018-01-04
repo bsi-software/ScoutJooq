@@ -7,6 +7,16 @@
 package ${package}.database.or.core;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
+
 import ${package}.database.or.DefaultCatalog;
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
@@ -17,16 +27,6 @@ import ${package}.database.or.core.tables.Text;
 import ${package}.database.or.core.tables.Type;
 import ${package}.database.or.core.tables.User;
 import ${package}.database.or.core.tables.UserRole;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
 
 
 /**

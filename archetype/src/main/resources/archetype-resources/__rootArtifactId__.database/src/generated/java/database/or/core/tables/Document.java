@@ -7,11 +7,6 @@
 package ${package}.database.or.core.tables;
 
 
-import ${package}.database.generator.converter.LongConverter;
-import ${package}.database.or.core.Core;
-import ${package}.database.or.core.Keys;
-import ${package}.database.or.core.tables.records.DocumentRecord;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +21,11 @@ import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
+
+import ${package}.database.generator.converter.LongConverter;
+import ${package}.database.or.core.Core;
+import ${package}.database.or.core.Keys;
+import ${package}.database.or.core.tables.records.DocumentRecord;
 
 
 /**

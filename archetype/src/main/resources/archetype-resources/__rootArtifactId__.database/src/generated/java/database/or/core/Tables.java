@@ -7,6 +7,8 @@
 package ${package}.database.or.core;
 
 
+import javax.annotation.Generated;
+
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
 import ${package}.database.or.core.tables.Person;
@@ -16,8 +18,6 @@ import ${package}.database.or.core.tables.Text;
 import ${package}.database.or.core.tables.Type;
 import ${package}.database.or.core.tables.User;
 import ${package}.database.or.core.tables.UserRole;
-
-import javax.annotation.Generated;
 
 
 /**

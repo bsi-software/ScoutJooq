@@ -29,7 +29,6 @@ import org.eclipse.scout.rt.platform.util.IOUtility;
 import org.eclipse.scout.rt.platform.util.StringUtility;
 import org.eclipse.scout.rt.platform.util.date.DateUtility;
 import org.eclipse.scout.rt.shared.ScoutTexts;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

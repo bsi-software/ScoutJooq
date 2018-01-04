@@ -7,8 +7,6 @@
 package ${package}.database.or.core.tables.records;
 
 
-import ${package}.database.or.core.tables.Role;
-
 import javax.annotation.Generated;
 
 import org.jooq.Field;
@@ -16,6 +14,8 @@ import org.jooq.Record1;
 import org.jooq.Record3;
 import org.jooq.Row3;
 import org.jooq.impl.UpdatableRecordImpl;
+
+import ${package}.database.or.core.tables.Role;
 
 
 /**

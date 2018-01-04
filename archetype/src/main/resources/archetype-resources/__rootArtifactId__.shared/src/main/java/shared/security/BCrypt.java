@@ -21,7 +21,6 @@ package ${package}.shared.security;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-
 import java.security.SecureRandom;
 
 /**

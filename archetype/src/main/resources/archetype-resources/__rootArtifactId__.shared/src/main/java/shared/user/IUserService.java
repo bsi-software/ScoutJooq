@@ -13,9 +13,6 @@ import org.eclipse.scout.rt.shared.data.page.AbstractTablePageData;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 import org.eclipse.scout.rt.shared.services.lookup.ILookupRow;
 
-import ${package}.shared.user.ProfileFormData;
-import ${package}.shared.user.UserFormData;
-
 @TunnelToServer
 public interface IUserService extends IService {
 	

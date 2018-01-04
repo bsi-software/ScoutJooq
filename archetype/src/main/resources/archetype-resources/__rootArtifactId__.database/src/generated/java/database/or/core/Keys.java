@@ -7,6 +7,11 @@
 package ${package}.database.or.core;
 
 
+import javax.annotation.Generated;
+
+import org.jooq.UniqueKey;
+import org.jooq.impl.AbstractKeys;
+
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
 import ${package}.database.or.core.tables.Person;
@@ -25,11 +30,6 @@ import ${package}.database.or.core.tables.records.TextRecord;
 import ${package}.database.or.core.tables.records.TypeRecord;
 import ${package}.database.or.core.tables.records.UserRecord;
 import ${package}.database.or.core.tables.records.UserRoleRecord;
-
-import javax.annotation.Generated;
-
-import org.jooq.UniqueKey;
-import org.jooq.impl.AbstractKeys;
 
 
 /**

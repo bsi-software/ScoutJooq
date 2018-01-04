@@ -4,6 +4,7 @@
 package ${package}.database.generator;
 
 import org.junit.Test;
+
 import ${package}.database.table.TableDataInitializer;
 
 public class CreateIdTest {

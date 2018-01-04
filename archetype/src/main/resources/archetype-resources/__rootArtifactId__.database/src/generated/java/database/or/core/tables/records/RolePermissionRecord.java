@@ -7,14 +7,14 @@
 package ${package}.database.or.core.tables.records;
 
 
-import ${package}.database.or.core.tables.RolePermission;
-
 import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
+
+import ${package}.database.or.core.tables.RolePermission;
 
 
 /**
