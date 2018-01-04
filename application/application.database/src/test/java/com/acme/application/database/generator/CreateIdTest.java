@@ -1,6 +1,7 @@
 package com.acme.application.database.generator;
 
 import org.junit.Test;
+
 import com.acme.application.database.table.TableDataInitializer;
 
 public class CreateIdTest {

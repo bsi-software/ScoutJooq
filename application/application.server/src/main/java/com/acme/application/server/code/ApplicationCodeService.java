@@ -1,9 +1,6 @@
 package com.acme.application.server.code;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -37,247 +34,222 @@ import com.acme.application.shared.code.UpdateApplicationCodePermission;
 
 public class ApplicationCodeService extends AbstractBaseService<Code, CodeRecord> implements IApplicationCodeService {
 
-	@Override
-	public Code getTable() {
-		return Code.CODE;
-	}
+    @Override
+    public Code getTable() {
+        return Code.CODE;
+    }
 
-	@Override
-	public Field<String> getIdColumn() {
-		return Code.CODE.ID;
-	}
+    @Override
+    public Field<String> getIdColumn() {
+        return Code.CODE.ID;
+    }
 
-	@Override
-	public Logger getLogger() {
-		return LoggerFactory.getLogger(ApplicationCodeService.class);
-	}
+    @Override
+    public Logger getLogger() {
+        return LoggerFactory.getLogger(ApplicationCodeService.class);
+    }
 
-	@Override
-	public ApplicationCodePageData getApplicationCodeTableData(Class<? extends IApplicationCodeType> codeTypeName) {
-		ApplicationCodePageData pageData = new ApplicationCodePageData();
-		IApplicationCodeType codeType = ApplicationCodeUtility.getCodeType(codeTypeName);
-		String locale = ServerSession.get().getLocale().toLanguageTag();
-		String typeText = getText(codeType.getId(), locale);
-		
-		codeType
-		.getCodes(false)
-		.stream()
-		.forEach(code -> {
-			String id = code.getId();
+    @Override
+    public ApplicationCodePageData getApplicationCodeTableData(Class<? extends IApplicationCodeType> codeTypeName) {
+        ApplicationCodePageData pageData = new ApplicationCodePageData();
+        IApplicationCodeType codeType = ApplicationCodeUtility.getCodeType(codeTypeName);
+        String locale = ServerSession.get().getLocale().toLanguageTag();
+        String typeText = getText(codeType.getId(), locale);
 
-			ApplicationCodeRowData row = pageData.addRow();
-			row.setId(id);
-			row.setType(typeText);
-			row.setText(getText(id, locale));
-			row.setOrder(BigDecimal.valueOf(code.getOrder()));
-			row.setActive(code.isActive());
-		});
-		
+        codeType
+                .getCodes(false)
+                .stream()
+                .forEach(code -> {
+                    String id = code.getId();
 
-		return pageData;
-	}
+                    ApplicationCodeRowData row = pageData.addRow();
+                    row.setId(id);
+                    row.setType(typeText);
+                    row.setText(getText(id, locale));
+                    row.setOrder(BigDecimal.valueOf(code.getOrder()));
+                    row.setActive(code.isActive());
+                });
 
-	private String getText(String key, String locale) {
-		return BEANS.get(TextService.class).getText(key, locale);
-	}
+        return pageData;
+    }
 
-	@Override
-	public ApplicationCodeFormData load(ApplicationCodeFormData formData) {
-		if (!ACCESS.check(new ReadApplicationCodePermission())) {
-			throw new VetoException(TEXTS.get("AuthorizationFailed"));
-		}
+    private String getText(String key, String locale) {
+        return BEANS.get(TextService.class).getText(key, locale);
+    }
 
-		String codeId = formData.getCodeId().getValue();
-		String typeId = formData.getCodeTypeId();
+    @Override
+    public ApplicationCodeFormData load(ApplicationCodeFormData formData) {
+        if (!ACCESS.check(new ReadApplicationCodePermission())) {
+            throw new VetoException(TEXTS.get("AuthorizationFailed"));
+        }
 
-		if(codeId != null) {
-			CodeRecord codeRecord = getCodeRecord(typeId, codeId);
-			IApplicationCodeType codeType = ApplicationCodeUtility.getCodeType(typeId);
-			ICode<String> code = ApplicationCodeUtility.getCode(codeType.getCodeTypeClass(), codeId);
+        String codeId = formData.getCodeId().getValue();
+        String typeId = formData.getCodeTypeId();
 
-			formData.getCodeText().setValue(getCodeText(codeId, code));
-			formData.getOrder().setValue(getCodeOrder(codeRecord, code));
-			formData.getActive().setValue(getCodeActive(codeRecord, code));
-		}
-		else {
-			formData.getCodeId().setValue(ApplicationCodeUtility.generateCodeId());
-			formData.getOrder().setValue(BigDecimal.ZERO);
-			formData.getActive().setValue(true);
-		}
+        if (codeId != null) {
+            CodeRecord codeRecord = getCodeRecord(typeId, codeId);
+            IApplicationCodeType codeType = ApplicationCodeUtility.getCodeType(typeId);
+            ICode<String> code = ApplicationCodeUtility.getCode(codeType.getCodeTypeClass(), codeId);
 
-		return formData;
-	}
+            formData.getCodeText().setValue(getCodeText(codeId, code));
+            formData.getOrder().setValue(getCodeOrder(codeRecord, code));
+            formData.getActive().setValue(getCodeActive(codeRecord, code));
+        } else {
+            formData.getCodeId().setValue(ApplicationCodeUtility.generateCodeId());
+            formData.getOrder().setValue(BigDecimal.ZERO);
+            formData.getActive().setValue(true);
+        }
 
-	private String getCodeText(String codeId, ICode<String> code) {
-		String text = BEANS.get(TextService.class).getText(codeId, TextService.LOCALE_DEFAULT);
-		return text != null ? text : code.getText();
-	}
+        return formData;
+    }
 
-	private BigDecimal getCodeOrder(CodeRecord codeRecord, ICode<String> code) {
-		if(codeRecord != null && codeRecord.getOrder() != null) {
-			return BigDecimal.valueOf(codeRecord.getOrder());
-		}
-		else if(code != null) {
-			return BigDecimal.valueOf(code.getOrder());
-		}
-		else {
-			return BigDecimal.valueOf(0.0);
-		}
-	}
+    private String getCodeText(String codeId, ICode<String> code) {
+        String text = BEANS.get(TextService.class).getText(codeId, TextService.LOCALE_DEFAULT);
+        return text != null ? text : code.getText();
+    }
 
-	private Boolean getCodeActive(CodeRecord codeRecord, ICode<String> code) {
-		if(codeRecord != null) {
-			return codeRecord.getActive();
-		}
-		else if(code != null) {
-			return code.isActive();
-		}
-		else {
-			return true;
-		}
-	}
+    private BigDecimal getCodeOrder(CodeRecord codeRecord, ICode<String> code) {
+        if (codeRecord != null && codeRecord.getOrder() != null) {
+            return BigDecimal.valueOf(codeRecord.getOrder());
+        } else if (code != null) {
+            return BigDecimal.valueOf(code.getOrder());
+        } else {
+            return BigDecimal.valueOf(0.0);
+        }
+    }
 
-	@Override
-	public ApplicationCodeFormData store(ApplicationCodeFormData formData) {
-		if (!ACCESS.check(new UpdateApplicationCodePermission())) {
-			throw new VetoException(TEXTS.get("AuthorizationFailed"));
-		}
+    private Boolean getCodeActive(CodeRecord codeRecord, ICode<String> code) {
+        if (codeRecord != null) {
+            return codeRecord.getActive();
+        } else if (code != null) {
+            return code.isActive();
+        } else {
+            return true;
+        }
+    }
 
-		String codeTypeId = formData.getCodeTypeId();
-		store(codeTypeId, toCodeRow(formData));
-		ApplicationCodeUtility.reload(codeTypeId);
+    @Override
+    public ApplicationCodeFormData store(ApplicationCodeFormData formData) {
+        if (!ACCESS.check(new UpdateApplicationCodePermission())) {
+            throw new VetoException(TEXTS.get("AuthorizationFailed"));
+        }
 
-		return formData;
-	}
+        String codeTypeId = formData.getCodeTypeId();
+        store(codeTypeId, toCodeRow(formData));
+        ApplicationCodeUtility.reload(codeTypeId);
 
-	private ICodeRow<String> toCodeRow(ApplicationCodeFormData formData) {
-		String id = formData.getCodeId().getValue();
-		String text = formData.getCodeText().getValue();
-		double order = getOrder(formData);
-		String icon = null;
-		boolean active = formData.getActive().getValue();
+        return formData;
+    }
 
-		return new CodeRow<String>(id, text)
-				.withOrder(order)
-				.withIconId(icon)
-				.withActive(active);
-	}
-	
-	private double getOrder(ApplicationCodeFormData formData) {
-		if(formData.getOrder().getValue() != null) {
-			return (double)formData.getOrder().getValue().doubleValue();
-		}
-		else {
-			return 0.0;
-		}
-	}
+    private ICodeRow<String> toCodeRow(ApplicationCodeFormData formData) {
+        String id = formData.getCodeId().getValue();
+        String text = formData.getCodeText().getValue();
+        double order = getOrder(formData);
+        String icon = null;
+        boolean active = formData.getActive().getValue();
 
-	private CodeRecord toCodeRecord(String codeTypeId, ICodeRow<String> codeRow) {
-		double order = codeRow.getOrder();
-		String icon = null;
-		String value = null;
-		boolean active = codeRow.isActive();
-		return new CodeRecord(codeRow.getKey(), codeTypeId, order, icon, value, active);
-	}
+        return new CodeRow<String>(id, text)
+                .withOrder(order)
+                .withIconId(icon)
+                .withActive(active);
+    }
 
-	@Override
-	public void store(String codeTypeId, ICodeRow<String> codeRow) {
-		store(toCodeRecord(codeTypeId, codeRow));
-		storeText(codeRow);
-	}
+    private double getOrder(ApplicationCodeFormData formData) {
+        if (formData.getOrder().getValue() != null) {
+            return (double) formData.getOrder().getValue().doubleValue();
+        } else {
+            return 0.0;
+        }
+    }
 
-	/**
-	 * Persists the provided code.
-	 */
-	protected void store(CodeRecord code) {
-		try(Connection connection = getConnection()) {
-			DSLContext context = getContext(connection);
+    private CodeRecord toCodeRecord(String codeTypeId, ICodeRow<String> codeRow) {
+        double order = codeRow.getOrder();
+        String icon = null;
+        String value = null;
+        boolean active = codeRow.isActive();
+        return new CodeRecord(codeRow.getKey(), codeTypeId, order, icon, value, active);
+    }
 
-			if(dynamicCodeExists(context, code.getTypeId(), code.getId())) { 
-				context.executeUpdate(code); 
-			}
-			else { 
-				context.executeInsert(code); 
-			}
-		} 
-		catch (SQLException e) {
-			getLogger().error("Failed to execute store(). code: {}. exception: ", code, e);
-		}
-	}
+    @Override
+    public void store(String codeTypeId, ICodeRow<String> codeRow) {
+        store(toCodeRecord(codeTypeId, codeRow));
+        storeText(codeRow);
+    }
 
-	/**
-	 * Returns true iff the dynamic code specified by the provided id and code type id exists.
-	 */
-	private boolean dynamicCodeExists(DSLContext context, String codeTypeId, String codeId) {
-		return context.fetchExists(
-				context.select()
-				.from(getTable())
-				.where(getTable().TYPE_ID.eq(codeTypeId)
-						.and(getTable().ID.eq(codeId))));
-	}
+    /**
+     * Persists the provided code.
+     */
+    protected void store(CodeRecord code) {
+        DSLContext context = getContext();
 
-	/**
-	 * Persist default translation for code.
-	 */
-	private void storeText(ICodeRow<String> codeRow) {
-		TextService service = BEANS.get(TextService.class); 
-		service.store(new TextRecord(codeRow.getKey(), TextService.LOCALE_DEFAULT, codeRow.getText()));
-		service.invalidateCache();
-	}
+        if (dynamicCodeExists(context, code.getTypeId(), code.getId())) {
+            context.executeUpdate(code);
+        } else {
+            context.executeInsert(code);
+        }
+    }
 
-	@Override
-	public List<ICodeRow<String>> loadCodeRowsFromDatabase(String codeTypeId) {
-		getLogger().info("(Re)load dynamic codes from database for code id " + codeTypeId);
-		Locale locale = ServerSession.get().getLocale();
+    /**
+     * Returns true iff the dynamic code specified by the provided id and code type
+     * id exists.
+     */
+    private boolean dynamicCodeExists(DSLContext context, String codeTypeId, String codeId) {
+        return context.fetchExists(
+                context.select()
+                        .from(getTable())
+                        .where(getTable().TYPE_ID.eq(codeTypeId)
+                                .and(getTable().ID.eq(codeId))));
+    }
 
-		return getCodeRecords(codeTypeId)
-				.stream()
-				.map(code -> {
-					String id = code.getId();
-					String text = TEXTS.get(locale, id, id);
-					double order = code.getOrder() != null ? code.getOrder() : 0.0;
-					return new CodeRow<String>(id, text)
-							.withOrder(order)
-							.withIconId(code.getIcon())
-							.withActive(code.getActive());
-				})
-				.collect(Collectors.toList());
-	}
+    /**
+     * Persist default translation for code.
+     */
+    private void storeText(ICodeRow<String> codeRow) {
+        TextService service = BEANS.get(TextService.class);
+        service.store(new TextRecord(codeRow.getKey(), TextService.LOCALE_DEFAULT, codeRow.getText()));
+        service.invalidateCache();
+    }
 
-	/**
-	 * Loads all dynamic code rows from the database for the provided code type id.
-	 */
-	public List<CodeRecord> getCodeRecords(String codeTypeId) {
-		try(Connection connection = getConnection()) {
-			return getContext(connection)
-					.selectFrom(getTable())
-					.where(getTable().TYPE_ID.eq(codeTypeId))
-					.orderBy(Code.CODE.ORDER)
-					.stream()
-					.collect(Collectors.toList());
-		} 
-		catch (SQLException e) {
-			getLogger().error("Failed to execute getCodeRecords(). codeTypeId: {}. exception: ", codeTypeId, e);
-		}
+    @Override
+    public List<ICodeRow<String>> loadCodeRowsFromDatabase(String codeTypeId) {
+        getLogger().info("(Re)load dynamic codes from database for code id " + codeTypeId);
+        Locale locale = ServerSession.get().getLocale();
 
-		return new ArrayList<CodeRecord>();
-	}
+        return getCodeRecords(codeTypeId)
+                .stream()
+                .map(code -> {
+                    String id = code.getId();
+                    String text = TEXTS.get(locale, id, id);
+                    double order = code.getOrder() != null ? code.getOrder() : 0.0;
+                    return new CodeRow<String>(id, text)
+                            .withOrder(order)
+                            .withIconId(code.getIcon())
+                            .withActive(code.getActive());
+                })
+                .collect(Collectors.toList());
+    }
 
-	/**
-	 * Loads the dynamic code from the database specified for the provided code type id and code id.
-	 */
-	public CodeRecord getCodeRecord(String codeTypeId, String codeId) {
-		try(Connection connection = getConnection()) {
-			return getContext(connection)
-					.selectFrom(getTable())
-					.where(getTable().TYPE_ID.eq(codeTypeId)
-							.and(getTable().ID.eq(codeId)))
-					.fetchOne();
-		} 
-		catch (SQLException e) {
-			getLogger().error("Failed to execute getCodeRecord(). codeTypeId: {}, codeId: {}. exception: ", codeTypeId, codeId, e);
-		}
+    /**
+     * Loads all dynamic code rows from the database for the provided code type id.
+     */
+    public List<CodeRecord> getCodeRecords(String codeTypeId) {
+        return getContext()
+                .selectFrom(getTable())
+                .where(getTable().TYPE_ID.eq(codeTypeId))
+                .orderBy(Code.CODE.ORDER)
+                .stream()
+                .collect(Collectors.toList());
+    }
 
-		return null;
-	}
+    /**
+     * Loads the dynamic code from the database specified for the provided code type
+     * id and code id.
+     */
+    public CodeRecord getCodeRecord(String codeTypeId, String codeId) {
+        return getContext()
+                .selectFrom(getTable())
+                .where(getTable().TYPE_ID.eq(codeTypeId)
+                        .and(getTable().ID.eq(codeId)))
+                .fetchOne();
+    }
 }

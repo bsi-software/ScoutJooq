@@ -1,8 +1,5 @@
 package com.acme.application.server.text;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -10,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.scout.rt.platform.BEANS;
-import org.eclipse.scout.rt.platform.util.StringUtility;
 import org.eclipse.scout.rt.shared.TEXTS;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 import org.jooq.DSLContext;
@@ -28,279 +24,230 @@ import com.acme.application.shared.text.TextTablePageData.TextTableRowData;
 
 public class TextService extends AbstractBaseService<Text, TextRecord> implements ITextService {
 
-	public static final String TEXT_LOCALE_UNDEFINED = "[Undefined]";
-	public static final String LOCALE_DEFAULT = TextTable.LOCALE_DEFAULT;
-	private static final String ID_SEPARATOR = ":";
+    public static final String TEXT_LOCALE_UNDEFINED = "[Undefined]";
+    public static final String LOCALE_DEFAULT = TextTable.LOCALE_DEFAULT;
+    private static final String ID_SEPARATOR = ":";
 
-	@Override
-	public Text getTable() {
-		return Text.TEXT;
-	}
+    @Override
+    public Text getTable() {
+        return Text.TEXT;
+    }
 
-	@Override
-	public Field<String> getIdColumn() {
-		return Text.TEXT.KEY;
-	}
+    @Override
+    public Field<String> getIdColumn() {
+        return Text.TEXT.KEY;
+    }
 
-	protected Field<String> getLocaleColumn() {
-		return Text.TEXT.LOCALE;
-	}
+    protected Field<String> getLocaleColumn() {
+        return Text.TEXT.LOCALE;
+    }
 
-	@Override
-	public Logger getLogger() {
-		return LoggerFactory.getLogger(TextService.class);
-	}
+    @Override
+    public Logger getLogger() {
+        return LoggerFactory.getLogger(TextService.class);
+    }
 
-	@Override
-	public boolean exists(String id) {
-		try(Connection connection = getConnection()) {
-			DSLContext context = getContext(connection); 
-			return exists(context, id);
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute exists(). id: {}, exception: ", id, e);
-		}
+    @Override
+    public boolean exists(String id) {
+        DSLContext context = getContext();
+        return exists(context, id);
+    }
 
-		return false;
-	}
+    private boolean exists(DSLContext context, String id) {
+        String key = toKey(id);
+        String locale = toLocale(id);
 
-	private boolean exists(DSLContext context, String id) {
-		String key = toKey(id);
-		String locale = toLocale(id);
+        return context
+                .fetchExists(
+                        context
+                                .select()
+                                .from(getTable())
+                                .where(getTable().KEY.eq(key)
+                                        .and(getTable().LOCALE.eq(locale))));
+    }
 
-		return context
-				.fetchExists(
-						context
-						.select()
-						.from(getTable())
-						.where(getTable().KEY.eq(key)
-								.and(getTable().LOCALE.eq(locale))));
-	}
+    @Override
+    public TextRecord get(String id) {
+        String key = toKey(id);
+        String locale = toLocale(id);
 
+        return get(key, locale);
+    }
 
-	@Override
-	public TextRecord get(String id) {
-		String key = toKey(id);
-		String locale = toLocale(id);
+    public List<TextRecord> getAll(String key) {
+        return getContext()
+                .selectFrom(getTable())
+                .where(getTable().KEY.eq(key))
+                .stream()
+                .collect(Collectors.toList());
+    }
 
-		try(Connection connection = getConnection()) {
-			return get(key, locale, null);
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute getAll(). key: {}, exception: ", key, e);
-		}
-		
-		return null;
-	}
+    /**
+     * Stores/updates the provided code record.
+     */
+    public void store(TextRecord record) {
+        String id = TextService.toId(record.getLocale(), record.getKey());
+        store(id, record);
+    }
 
-	public List<TextRecord> getAll(String key) {
-		try(Connection connection = getConnection()) {
-			return getContext(connection)
-					.selectFrom(getTable())
-					.where(getTable().KEY.eq(key))
-					.stream()
-					.collect(Collectors.toList());
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute getAll(). key: {}, exception: ", key, e);
-		}
+    @Override
+    public void store(String id, TextRecord record) {
+        DSLContext context = getContext();
+        if (exists(context, id)) {
+            context
+                    .update(getTable())
+                    .set(record)
+                    .where(getIdColumn().eq(toKey(id))).and(getLocaleColumn().eq(toLocale(id)))
+                    .execute();
+        } else {
+            context
+                    .insertInto(getTable())
+                    .set(record)
+                    .execute();
+        }
+    }
 
-		return new ArrayList<TextRecord>();
-	}
+    public String getText(String key, String locale) {
+        TextRecord record = get(key, locale);
 
-	/**
-	 * Stores/updates the provided code record.
-	 */
-	public void store(TextRecord record) {
-		String id = TextService.toId(record.getLocale(), record.getKey());
-		store(id, record);
-	}
+        if (record == null && !LOCALE_DEFAULT.equals(locale)) {
+            record = get(key, LOCALE_DEFAULT);
+        }
 
-	@Override
-	public void store(String id, TextRecord record) {
-		try(Connection connection = getConnection()) {
-			DSLContext context = getContext(connection);
-			if (exists(context, id)) {
-				context
-				.update(getTable())
-				.set(record)
-				.where(getIdColumn().eq(toKey(id))).and(getLocaleColumn().eq(toLocale(id)))
-				.execute();
-			} 
-			else {
-				context
-				.insertInto(getTable())
-				.set(record)
-				.execute();
-			}
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute store(). id: {}, record: {}. exception: ", id, record, e);
-		}
-	}
+        if (record == null) {
+            return "missing-text-key:" + key;
+        }
 
-	public String getText(String key, String locale) {
-		try(Connection connection = getConnection()) {
-			String text = getText(key, locale, connection);
+        return record.getText();
+    }
 
-			if(text != null) {
-				return text;
-			}
-			// fall back with default locale
-			else if(!LOCALE_DEFAULT.equals(locale)) {
-				return getText(key, LOCALE_DEFAULT, connection); 
-			}
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute get(). locale: {}, key: {}, exception: ", locale, key, e);
-		}
+    private TextRecord get(String key, String locale) {
+        TextRecord text = getContext()
+                .selectFrom(getTable())
+                .where(getTable().KEY.eq(key)
+                        .and(getTable().LOCALE.eq(locale)))
+                .fetchOne();
+        return text;
+    }
 
-		return null;
-	}
+    public static String toId(String locale, String key) {
+        if (key == null) {
+            key = "";
+        }
 
-	private String getText(String key, String locale, Connection connection) {
-		TextRecord text = get(key, locale, connection);
+        if (locale == null) {
+            return String.format("%s%s%s", LOCALE_DEFAULT, ID_SEPARATOR, key);
+        } else {
+            return String.format("%s%s%s", locale, ID_SEPARATOR, key);
+        }
+    }
 
-		if(text != null && StringUtility.hasText(text.getText())) {
-			return text.getText();
-		}
+    public static String toKey(String id) {
+        if (!idIsValid(id)) {
+            return null;
+        }
 
-		return null;
-	}
+        return id.substring(id.indexOf(ID_SEPARATOR) + 1);
+    }
 
-	private TextRecord get(String key, String locale, Connection connection) {
-		TextRecord text = getContext(connection)
-				.selectFrom(getTable())
-				.where(getTable().KEY.eq(key)
-						.and(getTable().LOCALE.eq(locale)))
-				.fetchOne();
-		return text;
-	}
+    public static String toLocale(String id) {
+        if (!idIsValid(id)) {
+            return null;
+        }
 
-	public static String toId(String locale, String key) {
-		if (key == null) {
-			key = "";
-		}
+        return id.substring(0, id.indexOf(ID_SEPARATOR));
+    }
 
-		if (locale == null) {
-			return String.format("%s%s%s", LOCALE_DEFAULT, ID_SEPARATOR, key);
-		} else {
-			return String.format("%s%s%s", locale, ID_SEPARATOR, key);
-		}
-	}
+    /**
+     * Returns the string representation for the provided locale. For a null value
+     * the method returns value {@link TextService#LOCALE_DEFAULT}.
+     */
+    public static String convertLocale(Locale locale) {
+        if (locale == null) {
+            return LOCALE_DEFAULT;
+        }
 
-	public static String toKey(String id) {
-		if (!idIsValid(id)) {
-			return null;
-		}
+        return locale.toLanguageTag();
+    }
 
-		return id.substring(id.indexOf(ID_SEPARATOR) + 1);
-	}
+    public static Locale convertLocale(String locale) {
+        if (locale == null) {
+            return Locale.forLanguageTag(LOCALE_DEFAULT);
+        }
 
-	public static String toLocale(String id) {
-		if (!idIsValid(id)) {
-			return null;
-		}
+        return Locale.forLanguageTag(locale);
+    }
 
-		return id.substring(0, id.indexOf(ID_SEPARATOR));
-	}
+    /**
+     * Returns true iff the provided id is a correct representation of a locale-key
+     * pair.
+     */
+    private static boolean idIsValid(String id) {
+        if (id == null) {
+            return false;
+        }
 
-	/**
-	 * Returns the string representation for the provided locale.
-	 * For a null value the method returns value {@link TextService#LOCALE_DEFAULT}.
-	 */
-	public static String convertLocale(Locale locale) {
-		if(locale == null) {
-			return LOCALE_DEFAULT;
-		}
+        int separatorIndex = id.indexOf(ID_SEPARATOR);
 
-		return locale.toLanguageTag();
-	}
+        if (separatorIndex <= 0) {
+            return false;
+        }
 
-	public static Locale convertLocale(String locale) {
-		return Locale.forLanguageTag(locale);
-	}
+        if (separatorIndex + 1 >= id.length()) {
+            return false;
+        }
 
-	/**
-	 * Returns true iff the provided id is a correct representation of a locale-key
-	 * pair.
-	 */
-	private static boolean idIsValid(String id) {
-		if (id == null) {
-			return false;
-		}
+        return true;
+    }
 
-		int separatorIndex = id.indexOf(ID_SEPARATOR);
+    @Override
+    public Map<String, String> getTexts(String key) {
+        Map<String, String> texts = new HashMap<>();
 
-		if (separatorIndex <= 0) {
-			return false;
-		}
+        getContext()
+                .selectFrom(getTable())
+                .where(getTable().KEY.eq(key))
+                .fetchStream().forEach(text -> {
+                    texts.put(text.getLocale(), text.getText());
+                });
 
-		if (separatorIndex + 1 >= id.length()) {
-			return false;
-		}
+        return texts;
+    }
 
-		return true;
-	}
+    @Override
+    public void addText(String key, String locale, String text) {
+        store(toId(locale, key), new TextRecord(key, locale, text));
+    }
 
-	@Override
-	public Map<String, String> getTexts(String key) {
-		Map<String, String> texts = new HashMap<>();
+    @Override
+    public void deleteText(String key, String locale) {
+        getContext()
+                .deleteFrom(getTable())
+                .where(getTable().KEY.eq(key).and(getTable().LOCALE.eq(locale)))
+                .execute();
+    }
 
-		try(Connection connection = getConnection()) {
-			getContext(connection)
-			.selectFrom(getTable())
-			.where(getTable().KEY.eq(key))
-			.fetchStream().forEach(text -> {
-				texts.put(text.getLocale(), text.getText());
-			});
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute getTexts(). key: {}, exception: ", key, e);
-		}
+    @Override
+    public void invalidateCache() {
+        BEANS.get(TextDbProviderService.class).invalidateCache();
+    }
 
-		return texts;
-	}
+    @Override
+    public TextTablePageData getTextTableData(SearchFilter filter) {
+        TextTablePageData pageData = new TextTablePageData();
 
-	@Override
-	public void addText(String key, String locale, String text) {
-		store(toId(locale, key), new TextRecord(key, locale, text));
-	}
+        getAll()
+                .stream()
+                .forEach(text -> {
+                    String key = text.getKey();
+                    String localeId = text.getLocale();
 
-	@Override
-	public void deleteText(String key, String locale) {
-		try(Connection connection = getConnection()) {
-			getContext(connection)
-			.deleteFrom(getTable())
-			.where(getTable().KEY.eq(key).and(getTable().LOCALE.eq(locale)))
-			.execute();
-		}
-		catch (SQLException e) {
-			getLogger().error("Failed to execute getTexts(). key: {}, exception: ", key, e);
-		}
-	}
+                    TextTableRowData row = pageData.addRow();
+                    row.setKey(key);
+                    row.setLocale(localeId);
+                    row.setText(TEXTS.getWithFallback(TextService.convertLocale(localeId), key, ""));
+                });
 
-	@Override
-	public void invalidateCache() {
-		BEANS.get(TextDbProviderService.class).invalidateCache();
-	}
-
-	@Override
-	public TextTablePageData getTextTableData(SearchFilter filter) {
-		TextTablePageData pageData = new TextTablePageData();
-
-		getAll()
-		.stream()
-		.forEach(text -> {
-			String key = text.getKey();
-			String localeId = text.getLocale();
-
-			TextTableRowData row = pageData.addRow();
-			row.setKey(key);
-			row.setLocale(localeId);
-			row.setText(TEXTS.getWithFallback(TextService.convertLocale(localeId), key, ""));
-		});
-
-		return pageData;
-	}
+        return pageData;
+    }
 }

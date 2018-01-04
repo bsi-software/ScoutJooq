@@ -4,6 +4,8 @@
 package com.acme.application.database.or.core;
 
 
+import javax.annotation.Generated;
+
 import com.acme.application.database.or.core.tables.Code;
 import com.acme.application.database.or.core.tables.Document;
 import com.acme.application.database.or.core.tables.Person;
@@ -13,8 +15,6 @@ import com.acme.application.database.or.core.tables.Text;
 import com.acme.application.database.or.core.tables.Type;
 import com.acme.application.database.or.core.tables.User;
 import com.acme.application.database.or.core.tables.UserRole;
-
-import javax.annotation.Generated;
 
 
 /**

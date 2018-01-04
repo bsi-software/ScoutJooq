@@ -4,6 +4,11 @@
 package com.acme.application.database.or.core;
 
 
+import javax.annotation.Generated;
+
+import org.jooq.UniqueKey;
+import org.jooq.impl.AbstractKeys;
+
 import com.acme.application.database.or.core.tables.Code;
 import com.acme.application.database.or.core.tables.Document;
 import com.acme.application.database.or.core.tables.Person;
@@ -22,11 +27,6 @@ import com.acme.application.database.or.core.tables.records.TextRecord;
 import com.acme.application.database.or.core.tables.records.TypeRecord;
 import com.acme.application.database.or.core.tables.records.UserRecord;
 import com.acme.application.database.or.core.tables.records.UserRoleRecord;
-
-import javax.annotation.Generated;
-
-import org.jooq.UniqueKey;
-import org.jooq.impl.AbstractKeys;
 
 
 /**

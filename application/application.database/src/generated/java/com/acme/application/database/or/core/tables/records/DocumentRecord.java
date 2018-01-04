@@ -4,8 +4,6 @@
 package com.acme.application.database.or.core.tables.records;
 
 
-import com.acme.application.database.or.core.tables.Document;
-
 import java.math.BigDecimal;
 
 import javax.annotation.Generated;
@@ -15,6 +13,8 @@ import org.jooq.Record1;
 import org.jooq.Record8;
 import org.jooq.Row8;
 import org.jooq.impl.UpdatableRecordImpl;
+
+import com.acme.application.database.or.core.tables.Document;
 
 
 /**

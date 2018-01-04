@@ -4,6 +4,16 @@
 package com.acme.application.database.or.core;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
+
 import com.acme.application.database.or.DefaultCatalog;
 import com.acme.application.database.or.core.tables.Code;
 import com.acme.application.database.or.core.tables.Document;
@@ -14,16 +24,6 @@ import com.acme.application.database.or.core.tables.Text;
 import com.acme.application.database.or.core.tables.Type;
 import com.acme.application.database.or.core.tables.User;
 import com.acme.application.database.or.core.tables.UserRole;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
 
 
 /**

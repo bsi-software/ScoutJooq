@@ -6,8 +6,6 @@ import org.eclipse.scout.rt.platform.service.IService;
 import org.eclipse.scout.rt.shared.TunnelToServer;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 
-import com.acme.application.shared.text.TextTablePageData;
-
 @TunnelToServer
 public interface ITextService extends IService {
 
