@@ -7,6 +7,19 @@
 package ${package}.database.or.core;
 
 
+import ${package}.database.or.DefaultCatalog;
+import ${package}.database.or.core.tables.Bookmark;
+import ${package}.database.or.core.tables.Code;
+import ${package}.database.or.core.tables.Document;
+import ${package}.database.or.core.tables.Person;
+import ${package}.database.or.core.tables.Role;
+import ${package}.database.or.core.tables.RolePermission;
+import ${package}.database.or.core.tables.Text;
+import ${package}.database.or.core.tables.Type;
+import ${package}.database.or.core.tables.User;
+import ${package}.database.or.core.tables.UserPreference;
+import ${package}.database.or.core.tables.UserRole;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,17 +29,6 @@ import javax.annotation.Generated;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
-
-import ${package}.database.or.DefaultCatalog;
-import ${package}.database.or.core.tables.Code;
-import ${package}.database.or.core.tables.Document;
-import ${package}.database.or.core.tables.Person;
-import ${package}.database.or.core.tables.Role;
-import ${package}.database.or.core.tables.RolePermission;
-import ${package}.database.or.core.tables.Text;
-import ${package}.database.or.core.tables.Type;
-import ${package}.database.or.core.tables.User;
-import ${package}.database.or.core.tables.UserRole;
 
 
 /**
@@ -42,7 +44,7 @@ import ${package}.database.or.core.tables.UserRole;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Core extends SchemaImpl {
 
-    private static final long serialVersionUID = 887932802;
+    private static final long serialVersionUID = 231095666;
 
     /**
      * The reference instance of <code>core</code>
@@ -95,6 +97,16 @@ public class Core extends SchemaImpl {
     public final UserRole USER_ROLE = ${package}.database.or.core.tables.UserRole.USER_ROLE;
 
     /**
+     * The table <code>core.bookmark</code>.
+     */
+    public final Bookmark BOOKMARK = ${package}.database.or.core.tables.Bookmark.BOOKMARK;
+
+    /**
+     * The table <code>core.user_preference</code>.
+     */
+    public final UserPreference USER_PREFERENCE = ${package}.database.or.core.tables.UserPreference.USER_PREFERENCE;
+
+    /**
      * No further instances allowed
      */
     private Core() {
@@ -127,6 +139,8 @@ public class Core extends SchemaImpl {
             Text.TEXT,
             Type.TYPE,
             User.USER,
-            UserRole.USER_ROLE);
+            UserRole.USER_ROLE,
+            Bookmark.BOOKMARK,
+            UserPreference.USER_PREFERENCE);
     }
 }

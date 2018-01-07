@@ -7,11 +7,7 @@
 package ${package}.database.or.core;
 
 
-import javax.annotation.Generated;
-
-import org.jooq.UniqueKey;
-import org.jooq.impl.AbstractKeys;
-
+import ${package}.database.or.core.tables.Bookmark;
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
 import ${package}.database.or.core.tables.Person;
@@ -20,7 +16,9 @@ import ${package}.database.or.core.tables.RolePermission;
 import ${package}.database.or.core.tables.Text;
 import ${package}.database.or.core.tables.Type;
 import ${package}.database.or.core.tables.User;
+import ${package}.database.or.core.tables.UserPreference;
 import ${package}.database.or.core.tables.UserRole;
+import ${package}.database.or.core.tables.records.BookmarkRecord;
 import ${package}.database.or.core.tables.records.CodeRecord;
 import ${package}.database.or.core.tables.records.DocumentRecord;
 import ${package}.database.or.core.tables.records.PersonRecord;
@@ -28,8 +26,14 @@ import ${package}.database.or.core.tables.records.RolePermissionRecord;
 import ${package}.database.or.core.tables.records.RoleRecord;
 import ${package}.database.or.core.tables.records.TextRecord;
 import ${package}.database.or.core.tables.records.TypeRecord;
+import ${package}.database.or.core.tables.records.UserPreferenceRecord;
 import ${package}.database.or.core.tables.records.UserRecord;
 import ${package}.database.or.core.tables.records.UserRoleRecord;
+
+import javax.annotation.Generated;
+
+import org.jooq.UniqueKey;
+import org.jooq.impl.AbstractKeys;
 
 
 /**
@@ -64,6 +68,8 @@ public class Keys {
     public static final UniqueKey<TypeRecord> PK_TYPE = UniqueKeys0.PK_TYPE;
     public static final UniqueKey<UserRecord> PK_USER = UniqueKeys0.PK_USER;
     public static final UniqueKey<UserRoleRecord> PK_USER_ROLE = UniqueKeys0.PK_USER_ROLE;
+    public static final UniqueKey<BookmarkRecord> PK_BOOKMARK = UniqueKeys0.PK_BOOKMARK;
+    public static final UniqueKey<UserPreferenceRecord> PK_USER_PREFERENCE = UniqueKeys0.PK_USER_PREFERENCE;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -84,5 +90,7 @@ public class Keys {
         public static final UniqueKey<TypeRecord> PK_TYPE = createUniqueKey(Type.TYPE, "PK_TYPE", Type.TYPE.ID);
         public static final UniqueKey<UserRecord> PK_USER = createUniqueKey(User.USER, "PK_USER", User.USER.USERNAME);
         public static final UniqueKey<UserRoleRecord> PK_USER_ROLE = createUniqueKey(UserRole.USER_ROLE, "PK_USER_ROLE", UserRole.USER_ROLE.USERNAME, UserRole.USER_ROLE.ROLE_NAME);
+        public static final UniqueKey<BookmarkRecord> PK_BOOKMARK = createUniqueKey(Bookmark.BOOKMARK, "PK_bookmark", Bookmark.BOOKMARK.USER);
+        public static final UniqueKey<UserPreferenceRecord> PK_USER_PREFERENCE = createUniqueKey(UserPreference.USER_PREFERENCE, "PK_user_preference", UserPreference.USER_PREFERENCE.USER, UserPreference.USER_PREFERENCE.NODE);
     }
 }

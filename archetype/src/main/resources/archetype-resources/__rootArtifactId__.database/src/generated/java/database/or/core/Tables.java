@@ -7,8 +7,7 @@
 package ${package}.database.or.core;
 
 
-import javax.annotation.Generated;
-
+import ${package}.database.or.core.tables.Bookmark;
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
 import ${package}.database.or.core.tables.Person;
@@ -17,7 +16,10 @@ import ${package}.database.or.core.tables.RolePermission;
 import ${package}.database.or.core.tables.Text;
 import ${package}.database.or.core.tables.Type;
 import ${package}.database.or.core.tables.User;
+import ${package}.database.or.core.tables.UserPreference;
 import ${package}.database.or.core.tables.UserRole;
+
+import javax.annotation.Generated;
 
 
 /**
@@ -77,4 +79,14 @@ public class Tables {
      * The table <code>core.USER_ROLE</code>.
      */
     public static final UserRole USER_ROLE = ${package}.database.or.core.tables.UserRole.USER_ROLE;
+
+    /**
+     * The table <code>core.bookmark</code>.
+     */
+    public static final Bookmark BOOKMARK = ${package}.database.or.core.tables.Bookmark.BOOKMARK;
+
+    /**
+     * The table <code>core.user_preference</code>.
+     */
+    public static final UserPreference USER_PREFERENCE = ${package}.database.or.core.tables.UserPreference.USER_PREFERENCE;
 }
