@@ -4,6 +4,8 @@
 package com.acme.application.database.or.core.tables.records;
 
 
+import com.acme.application.database.or.core.tables.Code;
+
 import javax.annotation.Generated;
 
 import org.jooq.Field;
@@ -11,8 +13,6 @@ import org.jooq.Record2;
 import org.jooq.Record6;
 import org.jooq.Row6;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import com.acme.application.database.or.core.tables.Code;
 
 
 /**

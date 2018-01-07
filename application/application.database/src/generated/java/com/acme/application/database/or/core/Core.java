@@ -4,17 +4,8 @@
 package com.acme.application.database.or.core;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
-
 import com.acme.application.database.or.DefaultCatalog;
+import com.acme.application.database.or.core.tables.Bookmark;
 import com.acme.application.database.or.core.tables.Code;
 import com.acme.application.database.or.core.tables.Document;
 import com.acme.application.database.or.core.tables.Person;
@@ -24,6 +15,16 @@ import com.acme.application.database.or.core.tables.Text;
 import com.acme.application.database.or.core.tables.Type;
 import com.acme.application.database.or.core.tables.User;
 import com.acme.application.database.or.core.tables.UserRole;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
 
 
 /**
@@ -39,7 +40,7 @@ import com.acme.application.database.or.core.tables.UserRole;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Core extends SchemaImpl {
 
-    private static final long serialVersionUID = 887932802;
+    private static final long serialVersionUID = -969535378;
 
     /**
      * The reference instance of <code>core</code>
@@ -92,6 +93,11 @@ public class Core extends SchemaImpl {
     public final UserRole USER_ROLE = com.acme.application.database.or.core.tables.UserRole.USER_ROLE;
 
     /**
+     * The table <code>core.bookmark</code>.
+     */
+    public final Bookmark BOOKMARK = com.acme.application.database.or.core.tables.Bookmark.BOOKMARK;
+
+    /**
      * No further instances allowed
      */
     private Core() {
@@ -124,6 +130,7 @@ public class Core extends SchemaImpl {
             Text.TEXT,
             Type.TYPE,
             User.USER,
-            UserRole.USER_ROLE);
+            UserRole.USER_ROLE,
+            Bookmark.BOOKMARK);
     }
 }

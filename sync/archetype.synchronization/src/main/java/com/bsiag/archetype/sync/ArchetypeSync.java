@@ -1,4 +1,4 @@
-package com.bsiag.crm.commons.archetype;
+package com.bsiag.archetype.sync;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,7 +10,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

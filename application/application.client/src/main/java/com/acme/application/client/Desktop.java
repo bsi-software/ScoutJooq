@@ -6,6 +6,8 @@ import org.eclipse.scout.rt.client.session.ClientSessionProvider;
 import org.eclipse.scout.rt.client.ui.action.keystroke.IKeyStroke;
 import org.eclipse.scout.rt.client.ui.action.menu.AbstractMenu;
 import org.eclipse.scout.rt.client.ui.desktop.AbstractDesktop;
+import org.eclipse.scout.rt.client.ui.desktop.bookmark.menu.AbstractBookmarkMenu;
+import org.eclipse.scout.rt.client.ui.desktop.bookmark.menu.AbstractBookmarkMenu.StartBookmarkMenu.SetStartBookmarkMenu;
 import org.eclipse.scout.rt.client.ui.desktop.outline.AbstractOutlineViewButton;
 import org.eclipse.scout.rt.client.ui.desktop.outline.IOutline;
 import org.eclipse.scout.rt.client.ui.form.ScoutInfoForm;
@@ -26,198 +28,214 @@ import com.acme.application.shared.ViewAdminOutlinePermission;
  * @author mzi
  */
 public class Desktop extends AbstractDesktop {
-	@Override
-	protected String getConfiguredTitle() {
-		return TEXTS.get("ApplicationTitle");
-	}
+    @Override
+    protected String getConfiguredTitle() {
+        return TEXTS.get("ApplicationTitle");
+    }
 
-	@Override
-	protected String getConfiguredLogoId() {
-		return Icons.AppLogo;
-	}
+    @Override
+    protected String getConfiguredLogoId() {
+        return Icons.AppLogo;
+    }
 
-	@Override
-	protected List<Class<? extends IOutline>> getConfiguredOutlines() {
-		return CollectionUtility.<Class<? extends IOutline>>arrayList(
-				WorkOutline.class, 
-				// TODO reenable search outline once it is needed
-				// SearchOutline.class,
-				AdminOutline.class);
-	}
+    @Override
+    protected List<Class<? extends IOutline>> getConfiguredOutlines() {
+        return CollectionUtility.<Class<? extends IOutline>>arrayList(
+                WorkOutline.class,
+                // TODO reenable search outline once it is needed
+                // SearchOutline.class,
+                AdminOutline.class);
+    }
 
-	@Override
-	protected void execDefaultView() {
-		selectFirstVisibleOutline();
-	}
+    @Override
+    protected void execDefaultView() {
+        selectFirstVisibleOutline();
+    }
 
-	protected void selectFirstVisibleOutline() {
-		for (IOutline outline : getAvailableOutlines()) {
-			if (outline.isEnabled() && outline.isVisible()) {
-				setOutline(outline.getClass());
-				return;
-			}
-		}
-	}
+    protected void selectFirstVisibleOutline() {
+        for (IOutline outline : getAvailableOutlines()) {
+            if (outline.isEnabled() && outline.isVisible()) {
+                setOutline(outline.getClass());
+                return;
+            }
+        }
+    }
 
-	@Order(1000)
-	public class HelpMenu extends AbstractMenu {
+    @Order(500)
+    public class BookmarkMenu extends AbstractBookmarkMenu {
+        @Override
+        protected String getConfiguredIconId() {
+            return Icons.Star;
+        }
+        
+        @Override
+        protected String getConfiguredText() {
+            return null;
+        }
+        
+        @Override
+        protected void execSelectionChanged(boolean selection) {
+            if (selection) {
+                boolean showAddMenus = getOutline() != null && getOutline().getActivePage() != null;
+                getMenu(AddUserBookmarkMenu.class).setEnabled(showAddMenus);
+                getMenu(AddGlobalBookmarkMenu.class).setEnabled(showAddMenus);
+                getMenu(SetStartBookmarkMenu.class).setEnabled(showAddMenus);
+            }
+        }
 
-		@Override
-		protected String getConfiguredIconId() {
-			return FontAwesomeIcons.fa_infoCircle;
-		}
+    }
 
-		@Override
-		protected String getConfiguredKeyStroke() {
-			return IKeyStroke.F9;
-		}
+    @Order(1000)
+    public class HelpMenu extends AbstractMenu {
 
-		@Override
-		protected String getConfiguredTooltipText() {
-			return TEXTS.get("Info");
-		}
+        @Override
+        protected String getConfiguredIconId() {
+            return FontAwesomeIcons.fa_infoCircle;
+        }
 
-		@Override
-		protected void execAction() {
-			ScoutInfoForm form = new ScoutInfoForm();
-			form.startModify();
-		}
-	}
+        @Override
+        protected String getConfiguredKeyStroke() {
+            return IKeyStroke.F9;
+        }
 
-	@Order(2000)
-	public class UserMenu extends AbstractMenu {
+        @Override
+        protected String getConfiguredTooltipText() {
+            return TEXTS.get("Info");
+        }
 
-		@Override
-		protected String getConfiguredText() {
-			return ClientSession.get().getUserId();
-		}
-		
-		@Override
-		protected String getConfiguredIconId() {
-			return FontAwesomeIcons.fa_user;
-		}
+        @Override
+        protected void execAction() {
+            ScoutInfoForm form = new ScoutInfoForm();
+            form.startModify();
+        }
+    }
 
-		@Override
-		protected String getConfiguredKeyStroke() {
-			return IKeyStroke.F10;
-		}
+    @Order(2000)
+    public class UserMenu extends AbstractMenu {
 
-		@Override
-		protected String getConfiguredTooltipText() {
-			return TEXTS.get("User");
-		}
+        @Override
+        protected String getConfiguredText() {
+            return ClientSession.get().getUserId();
+        }
 
-		@Order(1000)
-		public class ProfileMenu extends AbstractMenu {
+        @Override
+        protected String getConfiguredIconId() {
+            return FontAwesomeIcons.fa_user;
+        }
 
-			@Override
-			protected String getConfiguredIconId() {
-				return FontAwesomeIcons.fa_cog;
-			}
-			
-			@Override
-			protected String getConfiguredText() {
-				return TEXTS.get("Profile");
-			}
+        @Override
+        protected String getConfiguredKeyStroke() {
+            return IKeyStroke.F10;
+        }
 
-			@Override
-			protected void execAction() {
-				ProfileForm form = new ProfileForm();
-				form.startModify();
-			}
-		}
+        @Override
+        protected String getConfiguredTooltipText() {
+            return TEXTS.get("User");
+        }
 
-		@Order(2000)
-		public class LogoutMenu extends AbstractMenu {
+        @Order(1000)
+        public class ProfileMenu extends AbstractMenu {
 
-			@Override
-			protected String getConfiguredIconId() {
-				return FontAwesomeIcons.fa_signOut;
-			}
-			
-			@Override
-			protected String getConfiguredText() {
-				return TEXTS.get("Logout");
-			}
+            @Override
+            protected String getConfiguredIconId() {
+                return FontAwesomeIcons.fa_cog;
+            }
 
-			@Override
-			protected void execAction() {
-				ClientSessionProvider.currentSession(ClientSession.class).stop();
-			}
-		}
-	}
+            @Override
+            protected String getConfiguredText() {
+                return TEXTS.get("Profile");
+            }
 
-	@Order(1000)
-	public class WorkOutlineViewButton extends AbstractOutlineViewButton {
+            @Override
+            protected void execAction() {
+                ProfileForm form = new ProfileForm();
+                form.startModify();
+            }
+        }
 
-		public WorkOutlineViewButton() {
-			this(WorkOutline.class);
-		}
+        @Order(2000)
+        public class LogoutMenu extends AbstractMenu {
 
-		protected WorkOutlineViewButton(Class<? extends WorkOutline> outlineClass) {
-			super(Desktop.this, outlineClass);
-		}
+            @Override
+            protected String getConfiguredIconId() {
+                return FontAwesomeIcons.fa_signOut;
+            }
 
-		@Override
-		protected String getConfiguredKeyStroke() {
-			return IKeyStroke.F2;
-		}
-	}
+            @Override
+            protected String getConfiguredText() {
+                return TEXTS.get("Logout");
+            }
 
-	// TODO reenable once search outline is needed
-	/*
-	@Order(2000)
-	public class SearchOutlineViewButton extends AbstractOutlineViewButton {
+            @Override
+            protected void execAction() {
+                ClientSessionProvider.currentSession(ClientSession.class).stop();
+            }
+        }
+    }
 
-		public SearchOutlineViewButton() {
-			this(SearchOutline.class);
-		}
+    @Order(1000)
+    public class WorkOutlineViewButton extends AbstractOutlineViewButton {
 
-		protected SearchOutlineViewButton(Class<? extends SearchOutline> outlineClass) {
-			super(Desktop.this, outlineClass);
-		}
+        public WorkOutlineViewButton() {
+            this(WorkOutline.class);
+        }
 
-		@Override
-		protected DisplayStyle getConfiguredDisplayStyle() {
-			return DisplayStyle.TAB;
-		}
+        protected WorkOutlineViewButton(Class<? extends WorkOutline> outlineClass) {
+            super(Desktop.this, outlineClass);
+        }
 
-		@Override
-		protected String getConfiguredKeyStroke() {
-			return IKeyStroke.F3;
-		}
-	}
-	*/
+        @Override
+        protected String getConfiguredKeyStroke() {
+            return IKeyStroke.F2;
+        }
+    }
 
-	@Order(3000)
-	public class AdminOutlineViewButton extends AbstractOutlineViewButton {
+    // TODO reenable once search outline is needed
+    /*
+     * @Order(2000) public class SearchOutlineViewButton extends
+     * AbstractOutlineViewButton {
+     * 
+     * public SearchOutlineViewButton() { this(SearchOutline.class); }
+     * 
+     * protected SearchOutlineViewButton(Class<? extends SearchOutline>
+     * outlineClass) { super(Desktop.this, outlineClass); }
+     * 
+     * @Override protected DisplayStyle getConfiguredDisplayStyle() { return
+     * DisplayStyle.TAB; }
+     * 
+     * @Override protected String getConfiguredKeyStroke() { return IKeyStroke.F3; }
+     * }
+     */
 
-		public AdminOutlineViewButton() {
-			this(AdminOutline.class);
-		}
+    @Order(3000)
+    public class AdminOutlineViewButton extends AbstractOutlineViewButton {
 
-		protected AdminOutlineViewButton(Class<? extends AdminOutline> outlineClass) {
-			super(Desktop.this, outlineClass);
-		}
+        public AdminOutlineViewButton() {
+            this(AdminOutline.class);
+        }
 
-		@Override
-		protected void execInitAction() {
-			setVisiblePermission(new ViewAdminOutlinePermission());
-		}
+        protected AdminOutlineViewButton(Class<? extends AdminOutline> outlineClass) {
+            super(Desktop.this, outlineClass);
+        }
 
-		@Override
-		protected String getConfiguredIconId() {
-			return FontAwesomeIcons.fa_users;
-		}
+        @Override
+        protected void execInitAction() {
+            setVisiblePermission(new ViewAdminOutlinePermission());
+        }
 
-		@Override
-		protected DisplayStyle getConfiguredDisplayStyle() {
-			return DisplayStyle.TAB;
-		}
+        @Override
+        protected String getConfiguredIconId() {
+            return FontAwesomeIcons.fa_users;
+        }
 
-		@Override
-		protected String getConfiguredKeyStroke() {
-			return IKeyStroke.F3;
-		}
-	}
+        @Override
+        protected DisplayStyle getConfiguredDisplayStyle() {
+            return DisplayStyle.TAB;
+        }
+
+        @Override
+        protected String getConfiguredKeyStroke() {
+            return IKeyStroke.F3;
+        }
+    }
 }
