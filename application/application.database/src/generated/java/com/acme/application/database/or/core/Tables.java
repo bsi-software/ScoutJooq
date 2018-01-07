@@ -13,6 +13,7 @@ import com.acme.application.database.or.core.tables.RolePermission;
 import com.acme.application.database.or.core.tables.Text;
 import com.acme.application.database.or.core.tables.Type;
 import com.acme.application.database.or.core.tables.User;
+import com.acme.application.database.or.core.tables.UserPreference;
 import com.acme.application.database.or.core.tables.UserRole;
 
 import javax.annotation.Generated;
@@ -80,4 +81,9 @@ public class Tables {
      * The table <code>core.bookmark</code>.
      */
     public static final Bookmark BOOKMARK = com.acme.application.database.or.core.tables.Bookmark.BOOKMARK;
+
+    /**
+     * The table <code>core.user_preference</code>.
+     */
+    public static final UserPreference USER_PREFERENCE = com.acme.application.database.or.core.tables.UserPreference.USER_PREFERENCE;
 }

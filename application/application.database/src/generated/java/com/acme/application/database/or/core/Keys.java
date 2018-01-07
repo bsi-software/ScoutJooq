@@ -13,6 +13,7 @@ import com.acme.application.database.or.core.tables.RolePermission;
 import com.acme.application.database.or.core.tables.Text;
 import com.acme.application.database.or.core.tables.Type;
 import com.acme.application.database.or.core.tables.User;
+import com.acme.application.database.or.core.tables.UserPreference;
 import com.acme.application.database.or.core.tables.UserRole;
 import com.acme.application.database.or.core.tables.records.BookmarkRecord;
 import com.acme.application.database.or.core.tables.records.CodeRecord;
@@ -22,6 +23,7 @@ import com.acme.application.database.or.core.tables.records.RolePermissionRecord
 import com.acme.application.database.or.core.tables.records.RoleRecord;
 import com.acme.application.database.or.core.tables.records.TextRecord;
 import com.acme.application.database.or.core.tables.records.TypeRecord;
+import com.acme.application.database.or.core.tables.records.UserPreferenceRecord;
 import com.acme.application.database.or.core.tables.records.UserRecord;
 import com.acme.application.database.or.core.tables.records.UserRoleRecord;
 
@@ -64,6 +66,7 @@ public class Keys {
     public static final UniqueKey<UserRecord> PK_USER = UniqueKeys0.PK_USER;
     public static final UniqueKey<UserRoleRecord> PK_USER_ROLE = UniqueKeys0.PK_USER_ROLE;
     public static final UniqueKey<BookmarkRecord> PK_BOOKMARK = UniqueKeys0.PK_BOOKMARK;
+    public static final UniqueKey<UserPreferenceRecord> PK_USER_PREFERENCE = UniqueKeys0.PK_USER_PREFERENCE;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -85,5 +88,6 @@ public class Keys {
         public static final UniqueKey<UserRecord> PK_USER = createUniqueKey(User.USER, "PK_USER", User.USER.USERNAME);
         public static final UniqueKey<UserRoleRecord> PK_USER_ROLE = createUniqueKey(UserRole.USER_ROLE, "PK_USER_ROLE", UserRole.USER_ROLE.USERNAME, UserRole.USER_ROLE.ROLE_NAME);
         public static final UniqueKey<BookmarkRecord> PK_BOOKMARK = createUniqueKey(Bookmark.BOOKMARK, "PK_bookmark", Bookmark.BOOKMARK.USER);
+        public static final UniqueKey<UserPreferenceRecord> PK_USER_PREFERENCE = createUniqueKey(UserPreference.USER_PREFERENCE, "PK_user_preference", UserPreference.USER_PREFERENCE.USER, UserPreference.USER_PREFERENCE.NODE);
     }
 }

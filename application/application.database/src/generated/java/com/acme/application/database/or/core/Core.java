@@ -14,6 +14,7 @@ import com.acme.application.database.or.core.tables.RolePermission;
 import com.acme.application.database.or.core.tables.Text;
 import com.acme.application.database.or.core.tables.Type;
 import com.acme.application.database.or.core.tables.User;
+import com.acme.application.database.or.core.tables.UserPreference;
 import com.acme.application.database.or.core.tables.UserRole;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Core extends SchemaImpl {
 
-    private static final long serialVersionUID = -969535378;
+    private static final long serialVersionUID = 231095666;
 
     /**
      * The reference instance of <code>core</code>
@@ -98,6 +99,11 @@ public class Core extends SchemaImpl {
     public final Bookmark BOOKMARK = com.acme.application.database.or.core.tables.Bookmark.BOOKMARK;
 
     /**
+     * The table <code>core.user_preference</code>.
+     */
+    public final UserPreference USER_PREFERENCE = com.acme.application.database.or.core.tables.UserPreference.USER_PREFERENCE;
+
+    /**
      * No further instances allowed
      */
     private Core() {
@@ -131,6 +137,7 @@ public class Core extends SchemaImpl {
             Type.TYPE,
             User.USER,
             UserRole.USER_ROLE,
-            Bookmark.BOOKMARK);
+            Bookmark.BOOKMARK,
+            UserPreference.USER_PREFERENCE);
     }
 }
