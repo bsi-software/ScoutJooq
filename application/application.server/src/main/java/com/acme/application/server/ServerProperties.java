@@ -43,7 +43,7 @@ public class ServerProperties {
 	public static class DriverProperty extends AbstractStringConfigProperty {
 
 		@Override
-		protected String getDefaultValue() {
+		public String getDefaultValue() {
 			return DEFAULT_DRIVER;
 		}
 
@@ -51,12 +51,17 @@ public class ServerProperties {
 		public String getKey() {
 			return KEY_DRIVER;
 		}
+
+		@Override
+		public String description() {
+			return "Classname of the JDBC driver";
+		}
 	}
 	
 	public static class DialectProperty extends AbstractConfigProperty<SQLDialect, String> {
 
 		@Override
-		protected SQLDialect getDefaultValue() {
+		public SQLDialect getDefaultValue() {
 			return DEFAULT_DIALECT;
 		}
 
@@ -80,12 +85,17 @@ public class ServerProperties {
 		private String getValidValues() {
 			return "'" + StringUtility.join("','", Arrays.asList(SQLDialect.values())) + "'";
 		}
+
+		@Override
+		public String description() {
+			return "Sql dialect of the database";
+		}
 	}
 
 	public static class DatabaseAutoCreateProperty extends AbstractBooleanConfigProperty {
 
 		@Override
-		protected Boolean getDefaultValue() {
+		public Boolean getDefaultValue() {
 			return DEFAULT_AUTOCREATE;
 		}
 
@@ -93,12 +103,17 @@ public class ServerProperties {
 		public String getKey() {
 			return KEY_AUTOCREATE;
 		}
+
+		@Override
+		public String description() {
+		return "Boolean property to create database if there is none";
+		}
 	}
 
 	public static class DatabaseAutoPopulateProperty extends AbstractBooleanConfigProperty {
 
 		@Override
-		protected Boolean getDefaultValue() {
+		public Boolean getDefaultValue() {
 			return DEFAULT_AUTOPOPULATE;
 		}
 
@@ -106,12 +121,17 @@ public class ServerProperties {
 		public String getKey() {
 			return KEY_AUTOPOPULATE;
 		}
+
+		@Override
+		public String description() {
+			return "Boolean property to populate database automatically";
+		}
 	}
 
 	public static class JdbcMappingNameProperty extends AbstractStringConfigProperty {
 
 		@Override
-		protected String getDefaultValue() {
+		public String getDefaultValue() {
 			return DEFAULT_MAPPING;
 		}
 
@@ -119,12 +139,17 @@ public class ServerProperties {
 		public String getKey() {
 			return KEY_MAPPING;
 		}
+
+		@Override
+		public String description() {
+			return "JDBC Url of database";
+		}
 	}
 
 	public static class UsernameProperty extends AbstractStringConfigProperty {
 
 		@Override
-		protected String getDefaultValue() {
+		public String getDefaultValue() {
 			return DEFAULT_USERNAME;
 		}
 
@@ -132,12 +157,17 @@ public class ServerProperties {
 		public String getKey() {
 			return KEY_USERNAME;
 		}
+
+		@Override
+		public String description() {
+			return "Username for JDBC Connection";
+		}
 	}
 
 	public static class PasswordProperty extends AbstractStringConfigProperty {
 
 		@Override
-		protected String getDefaultValue() {
+		public String getDefaultValue() {
 			return DEFAULT_PASSWORD;
 		}
 
@@ -145,18 +175,28 @@ public class ServerProperties {
 		public String getKey() {
 			return KEY_PASSWORD;
 		}
+
+		@Override
+		public String description() {
+			return "Password for JDBC Connection";
+		}
 	}
 
 	public static class SuperUserSubjectProperty extends AbstractSubjectConfigProperty {
 
 		@Override
-		protected Subject getDefaultValue() {
+		public Subject getDefaultValue() {
 			return convertToSubject(DEFAULT_SUPERUSER);
 		}
 
 		@Override
 		public String getKey() {
 			return KEY_SUPERUSER_SUBJECT;
+		}
+
+		@Override
+		public String description() {
+			return "Username of privileged user in Servlet Container";
 		}
 	}
 }

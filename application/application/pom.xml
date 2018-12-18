@@ -21,8 +21,8 @@
 	<properties>
 		<com.acme.application.version>${project.version}</com.acme.application.version>
 		<jdk.source.version>1.8</jdk.source.version>
-		<org.eclipse.scout.rt.version>7.0.0.008_Oxygen</org.eclipse.scout.rt.version>
-		<org.jooq.version>3.10.1</org.jooq.version>
+		<org.eclipse.scout.rt.version>8.0.0.031_Simrel_2018_12</org.eclipse.scout.rt.version>
+		<org.jooq.version>3.10.8</org.jooq.version>
 	</properties>
 
 	<modules>

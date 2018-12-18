@@ -1,7 +1,7 @@
 package com.acme.application.shared.code;
 
 import org.eclipse.scout.rt.platform.Order;
-import org.eclipse.scout.rt.shared.TEXTS;
+import org.eclipse.scout.rt.platform.text.TEXTS;
 import org.eclipse.scout.rt.shared.services.common.code.AbstractCode;
 
 import com.acme.application.shared.FontAwesomeIcons;
