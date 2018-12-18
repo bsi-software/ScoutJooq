@@ -9,8 +9,8 @@ import java.util.Map;
 
 import org.eclipse.scout.rt.platform.BEANS;
 import org.eclipse.scout.rt.platform.Order;
+import org.eclipse.scout.rt.platform.text.ITextProviderService;
 import org.eclipse.scout.rt.platform.util.StringUtility;
-import org.eclipse.scout.rt.shared.services.common.text.ITextProviderService;
 
 /**
  * Manages translated texts from the database. The Ordering of this service is lower than {@link TextProviderService}

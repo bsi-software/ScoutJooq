@@ -4,7 +4,7 @@
 package ${package}.client.common;
 
 import org.eclipse.scout.rt.client.ui.basic.table.columns.AbstractBooleanColumn;
-import org.eclipse.scout.rt.shared.TEXTS;
+import org.eclipse.scout.rt.platform.text.TEXTS;
 
 public class AbstractActiveColumn extends AbstractBooleanColumn {
 	@Override

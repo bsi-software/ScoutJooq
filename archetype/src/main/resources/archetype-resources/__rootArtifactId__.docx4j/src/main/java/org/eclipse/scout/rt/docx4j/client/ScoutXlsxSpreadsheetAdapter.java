@@ -25,10 +25,11 @@ import org.eclipse.scout.rt.client.ui.desktop.outline.pages.IPage;
 import org.eclipse.scout.rt.client.ui.desktop.outline.pages.IPageWithNodes;
 import org.eclipse.scout.rt.client.ui.desktop.outline.pages.IPageWithTable;
 import org.eclipse.scout.rt.platform.exception.ProcessingException;
+import org.eclipse.scout.rt.platform.text.ScoutTexts;
+import org.eclipse.scout.rt.platform.text.TEXTS;
 import org.eclipse.scout.rt.platform.util.IOUtility;
 import org.eclipse.scout.rt.platform.util.StringUtility;
 import org.eclipse.scout.rt.platform.util.date.DateUtility;
-import org.eclipse.scout.rt.shared.ScoutTexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,10 +111,10 @@ public class ScoutXlsxSpreadsheetAdapter extends AbstractService {
 		// build verbose search text
 		// info rows
 		ArrayList<String> infoRowList = new ArrayList<String>();
-		infoRowList.add(ScoutTexts.get("Path") + ": " + page.getTree().getPathText(page));
-		infoRowList.add(ScoutTexts.get("NumberOfRows") + ": " + (csv.length - 1));
+		infoRowList.add(TEXTS.get("Path") + ": " + page.getTree().getPathText(page));
+		infoRowList.add(TEXTS.get("NumberOfRows") + ": " + (csv.length - 1));
 		if (writeDateAtEnd) {
-			infoRowList.add(ScoutTexts.get("ExportDate") + ": " + DateUtility.formatDate(new Date()));
+			infoRowList.add(TEXTS.get("ExportDate") + ": " + DateUtility.formatDate(new Date()));
 		}
 		String[] infoRows = infoRowList.toArray(new String[0]);
 		//
@@ -131,11 +132,11 @@ public class ScoutXlsxSpreadsheetAdapter extends AbstractService {
 		// build verbose search text
 		// info rows
 		ArrayList<String> infoRowList = new ArrayList<String>();
-		infoRowList.add(ScoutTexts.get("Path") + ": " + page.getTree().getPathText(page));
+		infoRowList.add(TEXTS.get("Path") + ": " + page.getTree().getPathText(page));
 		if (page.getSearchFilter() != null) {
 			String[] searchTree = page.getSearchFilter().getDisplayTexts();
 			if (searchTree != null && searchTree.length > 0) {
-				infoRowList.add(ScoutTexts.get("SearchConstraints"));
+				infoRowList.add(TEXTS.get("SearchConstraints"));
 				for (String s : searchTree) {
 					infoRowList.add("  " + s);
 				}
@@ -153,9 +154,9 @@ public class ScoutXlsxSpreadsheetAdapter extends AbstractService {
 		//      }
 		//    }
 
-		infoRowList.add(ScoutTexts.get("NumberOfRows") + ": " + (csv.length - 1));
+		infoRowList.add(TEXTS.get("NumberOfRows") + ": " + (csv.length - 1));
 		if (writeDateAtEnd) {
-			infoRowList.add(ScoutTexts.get("ExportDate") + ": " + DateUtility.formatDate(new Date()));
+			infoRowList.add(TEXTS.get("ExportDate") + ": " + DateUtility.formatDate(new Date()));
 		}
 		String[] infoRows = infoRowList.toArray(new String[0]);
 		//
@@ -171,8 +172,8 @@ public class ScoutXlsxSpreadsheetAdapter extends AbstractService {
 		// build verbose search text
 		// info rows
 		ArrayList<String> infoRowList = new ArrayList<String>();
-		infoRowList.add(ScoutTexts.get("NumberOfRows") + ": " + (csv.length - 1));
-		infoRowList.add(ScoutTexts.get("ExportDate") + ": " + DateUtility.formatDate(new Date()));
+		infoRowList.add(TEXTS.get("NumberOfRows") + ": " + (csv.length - 1));
+		infoRowList.add(TEXTS.get("ExportDate") + ": " + DateUtility.formatDate(new Date()));
 		String[] infoRows = infoRowList.toArray(new String[0]);
 		//
 		return exportCsv(templateName, locale, startRow, startCol, title, csv, false, infoRows);
