@@ -34,7 +34,7 @@ Properties used in the archetype
 
 ## Immediately running after creation
 
-There is a derby DB configured that will run in-memory. This is not intended for production, but so the applicaiton is immediately executable without any further set up.
+There is a derby DB configured that will run in-memory. This is not intended for production, but so the application is immediately executable without any further set up.
 
 ## Changing from Derby / Postgres to other Database
 
