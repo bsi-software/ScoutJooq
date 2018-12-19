@@ -10,22 +10,44 @@ mvn clean install
 
 ```
 
-Once it is in your local catalog you can generate a project from it:
+Once it is in your local catalog you can generate a project from it. Navigate to the directory where you want to create the new project and execute:
 
 ```bash
 mvn archetype:generate \
 -DarchetypeGroupId=org.eclipse.scout.archetypes \
 -DarchetypeArtifactId=basic-application-template \
--DartifactId=application
+-Dinteractive=true \
+-DarchetypeCatalog=local
 ```
 
-Properties used in the archetype
+The following properties are used in the archetype:
 
+* artefactId
 * groupId
 * version
 * package
 * appName
 * javaVersion
+
+In interactive mode, maven will ask for the values, otherwise you need to set them using `-D`:
+
+```bash
+mvn archetype:generate \
+-DarchetypeGroupId=org.eclipse.scout.archetypes \
+-DarchetypeArtifactId=basic-application-template \
+-DappName="My Test App" \
+-DgroupId=com.example \
+-DartifactId=com.example.testapp \
+-Dpackage=com.example.testapp \
+-Dversion=1.0.0-SNAPSHOT \
+-DarchetypeCatalog=local
+```
+
+Import the generated project into eclipse, launch configurations should be available. 
+
+## Requirements
+
+This code currently only works with Java 8.
 
 ## Post Generation Tasks
 

@@ -297,7 +297,7 @@
 
 					</includes>
 				</fileSet>
-				<fileSet encoding="UTF-8">
+				<fileSet encoding="UTF-8" filtered="true">
 					<directory></directory>
 					<includes>
 						<include>.gitignore</include>
@@ -432,7 +432,7 @@
 
 					</includes>
 				</fileSet>
-				<fileSet encoding="UTF-8">
+				<fileSet encoding="UTF-8" filtered="true">
 					<directory></directory>
 					<includes>
 						<include>.gitignore</include>
@@ -507,7 +507,7 @@
 
 					</includes>
 				</fileSet>
-				<fileSet encoding="UTF-8">
+				<fileSet encoding="UTF-8" filtered="true">
 					<directory></directory>
 					<includes>
 						<include>.gitignore</include>
