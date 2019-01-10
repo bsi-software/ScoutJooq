@@ -137,6 +137,11 @@ public class UserForm extends AbstractForm {
 
 			public class Table extends AbstractTable {
 
+				@Override
+				protected boolean getConfiguredAutoResizeColumns() {
+					return true;
+				}
+
 				public AssignedColumn getAssignedColumn() {
 					return getColumnSet().getColumnByClass(AssignedColumn.class);
 				}
@@ -185,7 +190,7 @@ public class UserForm extends AbstractForm {
 
 					@Override
 					protected int getConfiguredWidth() {
-						return 50;
+						return 100;
 					}
 
 					@Override
@@ -223,7 +228,7 @@ public class UserForm extends AbstractForm {
 		protected void execStore() {
 			UserFormData formData = new UserFormData();
 			exportFormData(formData);
-			formData = BEANS.get(IUserService.class).store(formData);
+			BEANS.get(IUserService.class).store(formData);
 		}
 
 		@Override
@@ -242,7 +247,7 @@ public class UserForm extends AbstractForm {
 		@Override
 		protected void execLoad() {
 			setEnabledPermission(new CreateUserPermission());
-			
+
 			getPasswordField().setMandatory(true);
 			UserFormData formData = new UserFormData();
 			exportFormData(formData);

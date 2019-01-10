@@ -18,34 +18,40 @@ public interface IBaseService<TABLE extends Table<RECORD>, RECORD extends Record
 	 * Returns the table object associated with this service.
 	 */
 	TABLE getTable();
-	
+
 	/**
 	 * Returns the id column for the table object associated with this service.
 	 */
 	Field<String> getIdColumn();
-	
+
 	/**
 	 * Returns true iff a record with the specified id exists.
 	 */
 	boolean exists(String id);
-	
+
 	/**
-	 * Returns the record for the specified id. 
+	 * Returns the record for the specified id.
 	 * Returns null if no such record exists.
 	 */
 	RECORD get(String id);
-	
+
 	/**
 	 * Returns all available records.
 	 */
 	List<RECORD> getAll();
-	
+
 	/**
 	 * Persists the provided record based on the id specified.
 	 * If no record with this id exists a new record is created, otherwise the existing record is updated.
 	 */
 	void store(String id, RECORD record);
-	
+
+	/**
+	 * Deletes the record with the specified id.
+	 * @return the number of rows deleted this way
+	 */
+	int delete(String id);
+
 	/**
 	 * Returns a logger instance for this class.
 	 * @return

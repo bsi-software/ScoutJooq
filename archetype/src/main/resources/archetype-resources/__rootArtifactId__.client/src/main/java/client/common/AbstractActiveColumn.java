@@ -14,6 +14,6 @@ public class AbstractActiveColumn extends AbstractBooleanColumn {
 
 	@Override
 	protected int getConfiguredWidth() {
-		return 100;
+		return 75;
 	}
 }

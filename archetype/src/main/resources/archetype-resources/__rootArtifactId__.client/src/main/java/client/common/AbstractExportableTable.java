@@ -22,13 +22,13 @@ import org.slf4j.LoggerFactory;
 import ${package}.shared.FontAwesomeIcons;
 
 public abstract class AbstractExportableTable extends AbstractTable {
-	
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractExportableTable.class);
-	
+
 	// TODO check if there is a better way to do this (ie. extending classes not having to implement getPageOutline...
 	abstract public IOutline getPageOutline();
-	
+
 	@Order(100000)
 	public class ExportToExcelMenu extends AbstractMenu {
 
@@ -36,17 +36,22 @@ public abstract class AbstractExportableTable extends AbstractTable {
 		protected String getConfiguredIconId() {
 			return FontAwesomeIcons.fa_fileExcelO;
 		}
-		
+
+		@Override
+		protected String getConfiguredText() {
+			return TEXTS.get("ExportToExcel");
+		}
+
 		@Override
 		protected String getConfiguredTooltipText() {
 			return TEXTS.get("ExportToExcel");
 		}
-		
+
 		@Override
 		protected boolean getConfiguredVisible() {
 			return getPageOutline() != null;
 		}
-		
+
 		@Override
 		protected byte getConfiguredHorizontalAlignment() {
 			return IAction.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -59,10 +64,10 @@ public abstract class AbstractExportableTable extends AbstractTable {
 
 		@Override
 		protected void execAction() {
-			if (pageIsActive()) { 
+			if (pageIsActive()) {
 				File xlsx = createExcelFile();
 				DownloadUtility.download(xlsx);
-			} 
+			}
 		}
 
 		private boolean pageIsActive() {
@@ -70,9 +75,8 @@ public abstract class AbstractExportableTable extends AbstractTable {
 		}
 
 		private File createExcelFile() {
-			ScoutXlsxSpreadsheetAdapter s = new ScoutXlsxSpreadsheetAdapter(); 
-			File xlsx = s.exportPage(null, 0, 0, getPageOutline().getActivePage());
-			return xlsx;
+			ScoutXlsxSpreadsheetAdapter s = new ScoutXlsxSpreadsheetAdapter();
+			return s.exportPage(null, 0, 0, getPageOutline().getActivePage());
 		}
 	}
 }

@@ -25,7 +25,7 @@ public class UserPreferenceBaseService extends AbstractJooqService implements IU
     @Override
     public Properties load(String userId, String node) {
         UserPreferenceRecord record = getContext().selectFrom(getTable()).where(createWhereCondition(userId, node)).fetchOne();
-        if(record == null) {
+        if (record == null) {
             return new Properties();
         }
         byte[] data = record.getData();
@@ -41,7 +41,7 @@ public class UserPreferenceBaseService extends AbstractJooqService implements IU
         try {
             byte[] data = SerializationUtility.createObjectSerializer().serialize(prefs);
             UserPreferenceRecord record = new UserPreferenceRecord(userId, node, data);
-            if(exists(userId, node)) {
+            if (exists(userId, node)) {
                 getContext().executeUpdate(record, createWhereCondition(userId, node));
             } else {
                getContext().executeInsert(record); 
