@@ -8,7 +8,7 @@ import org.eclipse.scout.rt.shared.TunnelToServer;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 import org.eclipse.scout.rt.shared.services.lookup.ILookupRow;
 
-import com.acme.application.shared.payment.PaymentFormData.DocumentTable;
+import com.acme.application.shared.booking.BookingFormData.DocumentTable;
 
 @TunnelToServer
 public interface IDocumentService extends IService {

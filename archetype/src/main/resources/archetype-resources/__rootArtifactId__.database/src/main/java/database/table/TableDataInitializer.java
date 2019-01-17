@@ -16,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ${package}.database.generator.IDataInitializer;
+import ${package}.database.or.core.tables.records.BookingDocumentRecord;
+import ${package}.database.or.core.tables.records.BookingRecord;
 import ${package}.database.or.core.tables.records.CodeRecord;
 import ${package}.database.or.core.tables.records.DocumentRecord;
-import ${package}.database.or.core.tables.records.PaymentDocumentRecord;
-import ${package}.database.or.core.tables.records.PaymentRecord;
 import ${package}.database.or.core.tables.records.PersonRecord;
 import ${package}.database.or.core.tables.records.RolePermissionRecord;
 import ${package}.database.or.core.tables.records.RoleRecord;
@@ -97,9 +97,8 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 	public static final TextRecord TEXT_USER_DE = new TextRecord(RoleTable.toTextKey(RoleTable.USER), Locale.GERMAN.toLanguageTag(), "Benutzer");
 	public static final TextRecord TEXT_GUEST_DE = new TextRecord(RoleTable.toTextKey(RoleTable.GUEST), Locale.GERMAN.toLanguageTag(), "Gast");
 
-	public static final PaymentRecord PAYMENT_ALICE = new PaymentRecord("a4e8fea9-e646-4e8e-897f-5f3b1d961234", "1234", "Vacation", Boolean.TRUE, new Date(), "", USER_ALICE.getUsername(), Boolean.TRUE);
-	public static final PaymentDocumentRecord PAYMENT_DOCUMENT_ALICE_1 = new PaymentDocumentRecord(PAYMENT_ALICE.getId(), DOCUMENT_ALICE_1.getId());
-	//public static final PaymentDocumentRecord PAYMENT_DOCUMENT_ALICE_2 = new PaymentDocumentRecord(PAYMENT_ALICE.getId(), DOCUMENT_ALICE_2.getId());
+	public static final BookingRecord BOOKING_ALICE = new BookingRecord("a4e8fea9-e646-4e8e-897f-5f3b1d961234", "Vacation", new Date(), new Date(), "Note 1", USER_ALICE.getUsername(), Boolean.TRUE);
+	public static final BookingDocumentRecord BOOKING_DOCUMENT_ALICE_1 = new BookingDocumentRecord(BOOKING_ALICE.getId(), DOCUMENT_ALICE_1.getId());
 
 	//----------------------------------------------------------------------------------//
 	private int index;
@@ -208,7 +207,7 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 		insertSampleUsers(ctx);
 		insertSampleRoles(ctx);
 		insertSampleDocuments(ctx);
-		insertSamplePayments(ctx);
+		insertSampleBookings(ctx);
 	}
 
 	private void insertSamplePersons(DSLContext ctx) {
@@ -235,10 +234,9 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 //		insert(ctx, DOCUMENT_ALICE_2);
 	}
 
-	private void insertSamplePayments(DSLContext ctx) {
-		insert(ctx, PAYMENT_ALICE);
-		insert(ctx, PAYMENT_DOCUMENT_ALICE_1);
-		//insert(ctx, PAYMENT_DOCUMENT_ALICE_2);
+	private void insertSampleBookings(DSLContext ctx) {
+		insert(ctx, BOOKING_ALICE);
+		insert(ctx, BOOKING_DOCUMENT_ALICE_1);
 	}
 
 	private void insert(DSLContext ctx, org.jooq.Record record) {
@@ -254,8 +252,8 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 			if(record instanceof TypeRecord) { ctx.executeInsert((TypeRecord)record); return; }
 			if(record instanceof UserRoleRecord) { ctx.executeInsert((UserRoleRecord)record); return; }
 			if(record instanceof UserRecord) { ctx.executeInsert((UserRecord)record); return; }
-			if(record instanceof PaymentRecord) { ctx.executeInsert((PaymentRecord)record); return; }
-			if(record instanceof PaymentDocumentRecord) { ctx.executeInsert((PaymentDocumentRecord)record); return; }
+			if(record instanceof BookingRecord) { ctx.executeInsert((BookingRecord)record); return; }
+			if(record instanceof BookingDocumentRecord) { ctx.executeInsert((BookingDocumentRecord)record); return; }
 
 			LOG.warn("unknown record type '{}' in insert(). skipping insert ", record.getClass().getSimpleName());
 		}

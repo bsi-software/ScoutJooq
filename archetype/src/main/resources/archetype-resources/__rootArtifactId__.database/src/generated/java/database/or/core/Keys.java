@@ -7,11 +7,11 @@
 package ${package}.database.or.core;
 
 
+import ${package}.database.or.core.tables.Booking;
+import ${package}.database.or.core.tables.BookingDocument;
 import ${package}.database.or.core.tables.Bookmark;
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
-import ${package}.database.or.core.tables.Payment;
-import ${package}.database.or.core.tables.PaymentDocument;
 import ${package}.database.or.core.tables.Person;
 import ${package}.database.or.core.tables.Role;
 import ${package}.database.or.core.tables.RolePermission;
@@ -20,11 +20,11 @@ import ${package}.database.or.core.tables.Type;
 import ${package}.database.or.core.tables.User;
 import ${package}.database.or.core.tables.UserPreference;
 import ${package}.database.or.core.tables.UserRole;
+import ${package}.database.or.core.tables.records.BookingDocumentRecord;
+import ${package}.database.or.core.tables.records.BookingRecord;
 import ${package}.database.or.core.tables.records.BookmarkRecord;
 import ${package}.database.or.core.tables.records.CodeRecord;
 import ${package}.database.or.core.tables.records.DocumentRecord;
-import ${package}.database.or.core.tables.records.PaymentDocumentRecord;
-import ${package}.database.or.core.tables.records.PaymentRecord;
 import ${package}.database.or.core.tables.records.PersonRecord;
 import ${package}.database.or.core.tables.records.RolePermissionRecord;
 import ${package}.database.or.core.tables.records.RoleRecord;
@@ -63,10 +63,10 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<BookingRecord> PK_BOOKING = UniqueKeys0.PK_BOOKING;
+    public static final UniqueKey<BookingDocumentRecord> PK_BOOKING_DOCUMENT = UniqueKeys0.PK_BOOKING_DOCUMENT;
     public static final UniqueKey<CodeRecord> PK_CODE = UniqueKeys0.PK_CODE;
     public static final UniqueKey<DocumentRecord> PK_DOCUMENT = UniqueKeys0.PK_DOCUMENT;
-    public static final UniqueKey<PaymentRecord> PK_PAYMENT = UniqueKeys0.PK_PAYMENT;
-    public static final UniqueKey<PaymentDocumentRecord> PK_PAYMENT_DOCUMENT = UniqueKeys0.PK_PAYMENT_DOCUMENT;
     public static final UniqueKey<PersonRecord> PK_PERSON = UniqueKeys0.PK_PERSON;
     public static final UniqueKey<RoleRecord> PK_ROLE = UniqueKeys0.PK_ROLE;
     public static final UniqueKey<RolePermissionRecord> PK_ROLE_PERMISSION = UniqueKeys0.PK_ROLE_PERMISSION;
@@ -87,10 +87,10 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 {
+        public static final UniqueKey<BookingRecord> PK_BOOKING = Internal.createUniqueKey(Booking.BOOKING, "PK_BOOKING", Booking.BOOKING.ID);
+        public static final UniqueKey<BookingDocumentRecord> PK_BOOKING_DOCUMENT = Internal.createUniqueKey(BookingDocument.BOOKING_DOCUMENT, "PK_BOOKING_DOCUMENT", BookingDocument.BOOKING_DOCUMENT.BOOKING_ID);
         public static final UniqueKey<CodeRecord> PK_CODE = Internal.createUniqueKey(Code.CODE, "PK_CODE", Code.CODE.ID, Code.CODE.TYPE_ID);
         public static final UniqueKey<DocumentRecord> PK_DOCUMENT = Internal.createUniqueKey(Document.DOCUMENT, "PK_DOCUMENT", Document.DOCUMENT.ID);
-        public static final UniqueKey<PaymentRecord> PK_PAYMENT = Internal.createUniqueKey(Payment.PAYMENT, "PK_PAYMENT", Payment.PAYMENT.ID);
-        public static final UniqueKey<PaymentDocumentRecord> PK_PAYMENT_DOCUMENT = Internal.createUniqueKey(PaymentDocument.PAYMENT_DOCUMENT, "PK_PAYMENT_DOCUMENT", PaymentDocument.PAYMENT_DOCUMENT.PAYMENT_ID);
         public static final UniqueKey<PersonRecord> PK_PERSON = Internal.createUniqueKey(Person.PERSON, "PK_PERSON", Person.PERSON.ID);
         public static final UniqueKey<RoleRecord> PK_ROLE = Internal.createUniqueKey(Role.ROLE, "PK_ROLE", Role.ROLE.NAME);
         public static final UniqueKey<RolePermissionRecord> PK_ROLE_PERMISSION = Internal.createUniqueKey(RolePermission.ROLE_PERMISSION, "PK_ROLE_PERMISSION", RolePermission.ROLE_PERMISSION.ROLE_NAME, RolePermission.ROLE_PERMISSION.PERMISSION);

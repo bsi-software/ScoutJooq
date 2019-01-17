@@ -18,18 +18,18 @@ import org.jooq.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ${package}.database.or.core.tables.BookingDocument;
 import ${package}.database.or.core.tables.Document;
-import ${package}.database.or.core.tables.PaymentDocument;
+import ${package}.database.or.core.tables.records.BookingDocumentRecord;
 import ${package}.database.or.core.tables.records.DocumentRecord;
-import ${package}.database.or.core.tables.records.PaymentDocumentRecord;
 import ${package}.database.table.TableUtility;
 import ${package}.server.common.AbstractBaseService;
+import ${package}.shared.booking.BookingFormData.DocumentTable;
 import ${package}.shared.code.FileCodeType;
 import ${package}.shared.common.DateTimeUtility;
 import ${package}.shared.document.DocumentTablePageData;
 import ${package}.shared.document.DocumentTablePageData.DocumentTableRowData;
 import ${package}.shared.document.IDocumentService;
-import ${package}.shared.payment.PaymentFormData.DocumentTable;
 
 public class DocumentService extends AbstractBaseService<Document, DocumentRecord> implements IDocumentService {
 
@@ -58,7 +58,7 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 	public DocumentTablePageData getDocumentTableData(SearchFilter filter, String paymentId) {
 		DocumentTablePageData pageData = new DocumentTablePageData();
 
-		forEachDocumentWithPaymentId(paymentId, document -> {
+		forEachDocumentWithBookingId(paymentId, document -> {
 			DocumentTableRowData row = pageData.addRow();
 			row.setId(document.getId());
 			row.setName(document.getName());
@@ -73,7 +73,7 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 	}
 
 	@Override
-	public void store(String name, byte[] content, String userId, String paymentId) {
+	public void store(String name, byte[] content, String userId, String bookingId) {
 		String id = TableUtility.createId();
 		String type = getDocumentType(name);
 		BigDecimal size = BigDecimal.valueOf(content.length);
@@ -81,7 +81,7 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 		DocumentRecord document = new DocumentRecord(id, name, type, size, content, userId, uploaded, true);
 
 		store(id, document);
-		BEANS.get(PaymentDocumentService.class).store(paymentId, new PaymentDocumentRecord(paymentId, id));
+		BEANS.get(BookingDocumentService.class).store(bookingId, new BookingDocumentRecord(bookingId, id));
 	}
 
 	private String getDocumentType(String name) {
@@ -99,11 +99,11 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 	}
 
 	@Override
-	public DocumentTable getDocumentTableData(String paymentId) {
+	public DocumentTable getDocumentTableData(String bookingId) {
 		DocumentTable table = new DocumentTable();
 
-		forEachDocumentWithPaymentId(paymentId, document -> {
-			${package}.shared.payment.PaymentFormData.DocumentTable.DocumentTableRowData row = table.addRow();
+		forEachDocumentWithBookingId(bookingId, document -> {
+			${package}.shared.booking.BookingFormData.DocumentTable.DocumentTableRowData row = table.addRow();
 			row.setId(document.getId());
 			row.setName(document.getName());
 			row.setType(document.getType());
@@ -116,14 +116,14 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 		return table;
 	}
 
-	private void forEachDocumentWithPaymentId(String paymentId, Consumer<? super DocumentRecord> consumer) {
+	private void forEachDocumentWithBookingId(String bookingId, Consumer<? super DocumentRecord> consumer) {
 		getContext()
         .selectFrom(getTable())
         .whereExists(
         		getContext()
-        		.select(PaymentDocument.PAYMENT_DOCUMENT.DOCUMENT_ID)
-        		.from(PaymentDocument.PAYMENT_DOCUMENT)
-        		.where(PaymentDocument.PAYMENT_DOCUMENT.PAYMENT_ID.eq(paymentId)))
+        		.select(BookingDocument.BOOKING_DOCUMENT.DOCUMENT_ID)
+        		.from(BookingDocument.BOOKING_DOCUMENT)
+        		.where(BookingDocument.BOOKING_DOCUMENT.BOOKING_ID.eq(bookingId)))
         .stream()
 		.forEach(consumer);
 	}

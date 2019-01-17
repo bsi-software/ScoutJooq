@@ -4,11 +4,11 @@
 package com.acme.application.database.or.core;
 
 
+import com.acme.application.database.or.core.tables.Booking;
+import com.acme.application.database.or.core.tables.BookingDocument;
 import com.acme.application.database.or.core.tables.Bookmark;
 import com.acme.application.database.or.core.tables.Code;
 import com.acme.application.database.or.core.tables.Document;
-import com.acme.application.database.or.core.tables.Payment;
-import com.acme.application.database.or.core.tables.PaymentDocument;
 import com.acme.application.database.or.core.tables.Person;
 import com.acme.application.database.or.core.tables.Role;
 import com.acme.application.database.or.core.tables.RolePermission;
@@ -35,6 +35,16 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
+     * The table <code>core.BOOKING</code>.
+     */
+    public static final Booking BOOKING = com.acme.application.database.or.core.tables.Booking.BOOKING;
+
+    /**
+     * The table <code>core.BOOKING_DOCUMENT</code>.
+     */
+    public static final BookingDocument BOOKING_DOCUMENT = com.acme.application.database.or.core.tables.BookingDocument.BOOKING_DOCUMENT;
+
+    /**
      * The table <code>core.CODE</code>.
      */
     public static final Code CODE = com.acme.application.database.or.core.tables.Code.CODE;
@@ -43,16 +53,6 @@ public class Tables {
      * The table <code>core.DOCUMENT</code>.
      */
     public static final Document DOCUMENT = com.acme.application.database.or.core.tables.Document.DOCUMENT;
-
-    /**
-     * The table <code>core.PAYMENT</code>.
-     */
-    public static final Payment PAYMENT = com.acme.application.database.or.core.tables.Payment.PAYMENT;
-
-    /**
-     * The table <code>core.PAYMENT_DOCUMENT</code>.
-     */
-    public static final PaymentDocument PAYMENT_DOCUMENT = com.acme.application.database.or.core.tables.PaymentDocument.PAYMENT_DOCUMENT;
 
     /**
      * The table <code>core.PERSON</code>.

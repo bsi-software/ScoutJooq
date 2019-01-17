@@ -7,11 +7,11 @@
 package ${package}.database.or.core;
 
 
+import ${package}.database.or.core.tables.Booking;
+import ${package}.database.or.core.tables.BookingDocument;
 import ${package}.database.or.core.tables.Bookmark;
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
-import ${package}.database.or.core.tables.Payment;
-import ${package}.database.or.core.tables.PaymentDocument;
 import ${package}.database.or.core.tables.Person;
 import ${package}.database.or.core.tables.Role;
 import ${package}.database.or.core.tables.RolePermission;
@@ -38,6 +38,16 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
+     * The table <code>core.BOOKING</code>.
+     */
+    public static final Booking BOOKING = ${package}.database.or.core.tables.Booking.BOOKING;
+
+    /**
+     * The table <code>core.BOOKING_DOCUMENT</code>.
+     */
+    public static final BookingDocument BOOKING_DOCUMENT = ${package}.database.or.core.tables.BookingDocument.BOOKING_DOCUMENT;
+
+    /**
      * The table <code>core.CODE</code>.
      */
     public static final Code CODE = ${package}.database.or.core.tables.Code.CODE;
@@ -46,16 +56,6 @@ public class Tables {
      * The table <code>core.DOCUMENT</code>.
      */
     public static final Document DOCUMENT = ${package}.database.or.core.tables.Document.DOCUMENT;
-
-    /**
-     * The table <code>core.PAYMENT</code>.
-     */
-    public static final Payment PAYMENT = ${package}.database.or.core.tables.Payment.PAYMENT;
-
-    /**
-     * The table <code>core.PAYMENT_DOCUMENT</code>.
-     */
-    public static final PaymentDocument PAYMENT_DOCUMENT = ${package}.database.or.core.tables.PaymentDocument.PAYMENT_DOCUMENT;
 
     /**
      * The table <code>core.PERSON</code>.

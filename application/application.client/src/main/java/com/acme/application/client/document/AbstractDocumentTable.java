@@ -22,9 +22,9 @@ import com.acme.application.client.common.AbstractExportableTable;
 import com.acme.application.client.common.AbstractIdColumn;
 import com.acme.application.client.common.DownloadUtility;
 import com.acme.application.client.user.UserLookupCall;
+import com.acme.application.shared.booking.BookingFormData.DocumentTable;
 import com.acme.application.shared.code.FileCodeType;
 import com.acme.application.shared.document.IDocumentService;
-import com.acme.application.shared.payment.PaymentFormData.DocumentTable;
 
 public abstract class AbstractDocumentTable extends AbstractExportableTable {
 
@@ -152,9 +152,9 @@ public abstract class AbstractDocumentTable extends AbstractExportableTable {
 
 	@Override
     protected void execDrop(ITableRow row, TransferObject t) {
-		String paymentId = getPaymentId();
-    	DownloadUtility.upload(t, paymentId);
-    	importFieldData(BEANS.get(IDocumentService.class).getDocumentTableData(paymentId));
+		String bookingId = getBookingId();
+    	DownloadUtility.upload(t, bookingId);
+    	importFieldData(BEANS.get(IDocumentService.class).getDocumentTableData(bookingId));
     	reloadTableData();
     }
 
@@ -189,7 +189,7 @@ public abstract class AbstractDocumentTable extends AbstractExportableTable {
 			getIdColumn().getSelectedValues()
 				.stream()
 				.forEach(service::delete);
-			importFieldData(BEANS.get(IDocumentService.class).getDocumentTableData(getPaymentId()));
+			importFieldData(BEANS.get(IDocumentService.class).getDocumentTableData(getBookingId()));
 	    	reloadTableData();
 		}
 
@@ -203,6 +203,6 @@ public abstract class AbstractDocumentTable extends AbstractExportableTable {
 
 	protected abstract void reloadTableData();
 
-	protected abstract String getPaymentId();
+	protected abstract String getBookingId();
 
 }

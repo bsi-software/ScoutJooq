@@ -7,7 +7,7 @@ import org.eclipse.scout.rt.client.ui.desktop.outline.pages.IPage;
 import org.eclipse.scout.rt.platform.Order;
 import org.eclipse.scout.rt.platform.text.TEXTS;
 
-import com.acme.application.client.payment.PaymentTablePage;
+import com.acme.application.client.booking.BookingTablePage;
 import com.acme.application.shared.Icons;
 
 /**
@@ -30,6 +30,6 @@ public class WorkOutline extends AbstractOutline {
 	protected void execCreateChildPages(List<IPage<?>> pageList) {
 		super.execCreateChildPages(pageList);
 
-		pageList.add(new PaymentTablePage());
+		pageList.add(new BookingTablePage());
 	}
 }

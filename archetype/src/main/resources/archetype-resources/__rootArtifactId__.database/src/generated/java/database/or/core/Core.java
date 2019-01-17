@@ -8,11 +8,11 @@ package ${package}.database.or.core;
 
 
 import ${package}.database.or.DefaultCatalog;
+import ${package}.database.or.core.tables.Booking;
+import ${package}.database.or.core.tables.BookingDocument;
 import ${package}.database.or.core.tables.Bookmark;
 import ${package}.database.or.core.tables.Code;
 import ${package}.database.or.core.tables.Document;
-import ${package}.database.or.core.tables.Payment;
-import ${package}.database.or.core.tables.PaymentDocument;
 import ${package}.database.or.core.tables.Person;
 import ${package}.database.or.core.tables.Role;
 import ${package}.database.or.core.tables.RolePermission;
@@ -46,12 +46,22 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Core extends SchemaImpl {
 
-    private static final long serialVersionUID = 361477531;
+    private static final long serialVersionUID = -1977032219;
 
     /**
      * The reference instance of <code>core</code>
      */
     public static final Core CORE = new Core();
+
+    /**
+     * The table <code>core.BOOKING</code>.
+     */
+    public final Booking BOOKING = ${package}.database.or.core.tables.Booking.BOOKING;
+
+    /**
+     * The table <code>core.BOOKING_DOCUMENT</code>.
+     */
+    public final BookingDocument BOOKING_DOCUMENT = ${package}.database.or.core.tables.BookingDocument.BOOKING_DOCUMENT;
 
     /**
      * The table <code>core.CODE</code>.
@@ -62,16 +72,6 @@ public class Core extends SchemaImpl {
      * The table <code>core.DOCUMENT</code>.
      */
     public final Document DOCUMENT = ${package}.database.or.core.tables.Document.DOCUMENT;
-
-    /**
-     * The table <code>core.PAYMENT</code>.
-     */
-    public final Payment PAYMENT = ${package}.database.or.core.tables.Payment.PAYMENT;
-
-    /**
-     * The table <code>core.PAYMENT_DOCUMENT</code>.
-     */
-    public final PaymentDocument PAYMENT_DOCUMENT = ${package}.database.or.core.tables.PaymentDocument.PAYMENT_DOCUMENT;
 
     /**
      * The table <code>core.PERSON</code>.
@@ -143,10 +143,10 @@ public class Core extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            Booking.BOOKING,
+            BookingDocument.BOOKING_DOCUMENT,
             Code.CODE,
             Document.DOCUMENT,
-            Payment.PAYMENT,
-            PaymentDocument.PAYMENT_DOCUMENT,
             Person.PERSON,
             Role.ROLE,
             RolePermission.ROLE_PERMISSION,

@@ -21,6 +21,8 @@ public class DownloadUtility {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DownloadUtility.class);
 
+	private DownloadUtility() { }
+
 	public static void download(File file) {
 		try {
 			byte [] content = Files.readAllBytes(file.toPath());
@@ -41,11 +43,11 @@ public class DownloadUtility {
 		.openUri(resource, OpenUriAction.DOWNLOAD);
 	}
 
-	public static void upload(TransferObject t, String paymentId) {
+	public static void upload(TransferObject t, String bookingId) {
 		try {
 			if (t instanceof ResourceListTransferObject) {
 				for (BinaryResource resource : ((ResourceListTransferObject) t).getResources()) {
-					addFile(resource, paymentId);
+					addFile(resource, bookingId);
 				}
 			}
 		}
@@ -54,12 +56,12 @@ public class DownloadUtility {
 		}
 	}
 
-	private static void addFile(BinaryResource file, String paymentId) {
+	private static void addFile(BinaryResource file, String bookingId) {
     	String name = file.getFilename();
     	String username = ClientSession.get().getUserId();
     	byte [] content = file.getContent();
 
-    	BEANS.get(IDocumentService.class).store(name, content, username, paymentId);
+    	BEANS.get(IDocumentService.class).store(name, content, username, bookingId);
     }
 
 }

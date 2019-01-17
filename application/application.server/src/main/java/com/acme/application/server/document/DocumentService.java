@@ -15,18 +15,18 @@ import org.jooq.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.acme.application.database.or.core.tables.BookingDocument;
 import com.acme.application.database.or.core.tables.Document;
-import com.acme.application.database.or.core.tables.PaymentDocument;
+import com.acme.application.database.or.core.tables.records.BookingDocumentRecord;
 import com.acme.application.database.or.core.tables.records.DocumentRecord;
-import com.acme.application.database.or.core.tables.records.PaymentDocumentRecord;
 import com.acme.application.database.table.TableUtility;
 import com.acme.application.server.common.AbstractBaseService;
+import com.acme.application.shared.booking.BookingFormData.DocumentTable;
 import com.acme.application.shared.code.FileCodeType;
 import com.acme.application.shared.common.DateTimeUtility;
 import com.acme.application.shared.document.DocumentTablePageData;
 import com.acme.application.shared.document.DocumentTablePageData.DocumentTableRowData;
 import com.acme.application.shared.document.IDocumentService;
-import com.acme.application.shared.payment.PaymentFormData.DocumentTable;
 
 public class DocumentService extends AbstractBaseService<Document, DocumentRecord> implements IDocumentService {
 
@@ -55,7 +55,7 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 	public DocumentTablePageData getDocumentTableData(SearchFilter filter, String paymentId) {
 		DocumentTablePageData pageData = new DocumentTablePageData();
 
-		forEachDocumentWithPaymentId(paymentId, document -> {
+		forEachDocumentWithBookingId(paymentId, document -> {
 			DocumentTableRowData row = pageData.addRow();
 			row.setId(document.getId());
 			row.setName(document.getName());
@@ -70,7 +70,7 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 	}
 
 	@Override
-	public void store(String name, byte[] content, String userId, String paymentId) {
+	public void store(String name, byte[] content, String userId, String bookingId) {
 		String id = TableUtility.createId();
 		String type = getDocumentType(name);
 		BigDecimal size = BigDecimal.valueOf(content.length);
@@ -78,7 +78,7 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 		DocumentRecord document = new DocumentRecord(id, name, type, size, content, userId, uploaded, true);
 
 		store(id, document);
-		BEANS.get(PaymentDocumentService.class).store(paymentId, new PaymentDocumentRecord(paymentId, id));
+		BEANS.get(BookingDocumentService.class).store(bookingId, new BookingDocumentRecord(bookingId, id));
 	}
 
 	private String getDocumentType(String name) {
@@ -96,11 +96,11 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 	}
 
 	@Override
-	public DocumentTable getDocumentTableData(String paymentId) {
+	public DocumentTable getDocumentTableData(String bookingId) {
 		DocumentTable table = new DocumentTable();
 
-		forEachDocumentWithPaymentId(paymentId, document -> {
-			com.acme.application.shared.payment.PaymentFormData.DocumentTable.DocumentTableRowData row = table.addRow();
+		forEachDocumentWithBookingId(bookingId, document -> {
+			com.acme.application.shared.booking.BookingFormData.DocumentTable.DocumentTableRowData row = table.addRow();
 			row.setId(document.getId());
 			row.setName(document.getName());
 			row.setType(document.getType());
@@ -113,14 +113,14 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 		return table;
 	}
 
-	private void forEachDocumentWithPaymentId(String paymentId, Consumer<? super DocumentRecord> consumer) {
+	private void forEachDocumentWithBookingId(String bookingId, Consumer<? super DocumentRecord> consumer) {
 		getContext()
         .selectFrom(getTable())
         .whereExists(
         		getContext()
-        		.select(PaymentDocument.PAYMENT_DOCUMENT.DOCUMENT_ID)
-        		.from(PaymentDocument.PAYMENT_DOCUMENT)
-        		.where(PaymentDocument.PAYMENT_DOCUMENT.PAYMENT_ID.eq(paymentId)))
+        		.select(BookingDocument.BOOKING_DOCUMENT.DOCUMENT_ID)
+        		.from(BookingDocument.BOOKING_DOCUMENT)
+        		.where(BookingDocument.BOOKING_DOCUMENT.BOOKING_ID.eq(bookingId)))
         .stream()
 		.forEach(consumer);
 	}

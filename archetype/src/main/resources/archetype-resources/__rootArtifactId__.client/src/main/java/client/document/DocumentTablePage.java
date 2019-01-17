@@ -11,9 +11,9 @@ import org.eclipse.scout.rt.platform.text.TEXTS;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 
 import ${package}.client.document.DocumentTablePage.Table;
+import ${package}.shared.booking.BookingFormData.DocumentTable;
 import ${package}.shared.document.DocumentTablePageData;
 import ${package}.shared.document.IDocumentService;
-import ${package}.shared.payment.PaymentFormData.DocumentTable;
 
 @Data(DocumentTablePageData.class)
 public class DocumentTablePage extends AbstractPageWithTable<Table> {
@@ -60,7 +60,7 @@ public class DocumentTablePage extends AbstractPageWithTable<Table> {
 		}
 
 		@Override
-		protected String getPaymentId() {
+		protected String getBookingId() {
 			return DocumentTablePage.this.getPaymentId();
 		}
 	}
