@@ -1,6 +1,7 @@
 package com.acme.application.server.booking;
 
 import org.eclipse.scout.rt.platform.BEANS;
+import org.eclipse.scout.rt.shared.data.form.fields.AbstractValueFieldData;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 import org.jooq.Field;
 import org.slf4j.Logger;
@@ -103,13 +104,20 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 
 	private void recordToFormData(BookingFormData formData, BookingRecord booking) {
 		if (booking != null && formData != null) {
-			formData.getBookingId().setValue(booking.getId());
-			formData.getDescription().setValue(booking.getDescription());
-			formData.getDateFrom().setValue(booking.getDateFrom());
-			formData.getDateTo().setValue(booking.getDateTo());
-			formData.getNote().setValue(booking.getNote());
-			formData.getUserId().setValue(booking.getUserId());
+
+			setValueWhenNull(formData.getBookingId(), booking.getId());
+			setValueWhenNull(formData.getDescription(), booking.getDescription());
+			setValueWhenNull(formData.getDateFrom(), booking.getDateFrom());
+			setValueWhenNull(formData.getDateTo(), booking.getDateTo());
+			setValueWhenNull(formData.getNote(), booking.getNote());
+			setValueWhenNull(formData.getUserId(), booking.getUserId());
 			formData.getActive().setValue(booking.getActive());
+		}
+	}
+
+	private <T> void setValueWhenNull(AbstractValueFieldData<T> field, T value) {
+		if (field.getValue() == null) {
+			field.setValue(value);
 		}
 	}
 
