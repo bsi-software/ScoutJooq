@@ -31,12 +31,10 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 		return Booking.BOOKING.ID;
 	}
 
-
 	@Override
 	public Logger getLogger() {
 		return LoggerFactory.getLogger(BookingService.class);
 	}
-
 
 	@Override
 	public BookingTablePageData getBookingTableData(SearchFilter filter) {
@@ -52,9 +50,9 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 	@Override
 	public BookingFormData load(BookingFormData formData) {
 		BookingRecord booking = getOrCreate(formData.getBookingId().getValue());
-        recordToFormData(formData, booking);
-        formData.getDocumentTable().setRows(BEANS.get(IDocumentService.class).getDocumentTableData(booking.getId()).getRows());
-        return formData;
+		recordToFormData(formData, booking);
+		formData.getDocumentTable().setRows(BEANS.get(IDocumentService.class).getDocumentTableData(booking.getId()).getRows());
+		return formData;
 	}
 
 	@Override
@@ -62,8 +60,8 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 		String bookingId = formData.getBookingId().getValue();
 		BookingRecord booking = getOrCreate(bookingId);
 		formDataToRecord(formData, booking);
-        store(booking.getId(), booking);
-        return formData;
+		store(booking.getId(), booking);
+		return formData;
 	}
 
 	@Override
@@ -104,7 +102,6 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 
 	private void recordToFormData(BookingFormData formData, BookingRecord booking) {
 		if (booking != null && formData != null) {
-
 			setValueWhenNull(formData.getBookingId(), booking.getId());
 			setValueWhenNull(formData.getDescription(), booking.getDescription());
 			setValueWhenNull(formData.getDateFrom(), booking.getDateFrom());

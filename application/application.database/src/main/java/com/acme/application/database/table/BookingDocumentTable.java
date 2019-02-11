@@ -10,7 +10,6 @@ public class BookingDocumentTable extends AbstractCoreTable {
 	public static final String BOOKING_ID = "BOOKING_ID";
 	public static final String DOCUMENT_ID = "DOCUMENT_ID";
 
-
 	@Override
 	public String getName() {
 		return TABLE;

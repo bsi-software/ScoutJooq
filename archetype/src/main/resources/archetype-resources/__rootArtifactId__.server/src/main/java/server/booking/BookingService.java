@@ -4,6 +4,7 @@
 package ${package}.server.booking;
 
 import org.eclipse.scout.rt.platform.BEANS;
+import org.eclipse.scout.rt.shared.data.form.fields.AbstractValueFieldData;
 import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 import org.jooq.Field;
 import org.slf4j.Logger;
@@ -33,12 +34,10 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 		return Booking.BOOKING.ID;
 	}
 
-
 	@Override
 	public Logger getLogger() {
 		return LoggerFactory.getLogger(BookingService.class);
 	}
-
 
 	@Override
 	public BookingTablePageData getBookingTableData(SearchFilter filter) {
@@ -54,9 +53,9 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 	@Override
 	public BookingFormData load(BookingFormData formData) {
 		BookingRecord booking = getOrCreate(formData.getBookingId().getValue());
-        recordToFormData(formData, booking);
-        formData.getDocumentTable().setRows(BEANS.get(IDocumentService.class).getDocumentTableData(booking.getId()).getRows());
-        return formData;
+		recordToFormData(formData, booking);
+		formData.getDocumentTable().setRows(BEANS.get(IDocumentService.class).getDocumentTableData(booking.getId()).getRows());
+		return formData;
 	}
 
 	@Override
@@ -64,8 +63,8 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 		String bookingId = formData.getBookingId().getValue();
 		BookingRecord booking = getOrCreate(bookingId);
 		formDataToRecord(formData, booking);
-        store(booking.getId(), booking);
-        return formData;
+		store(booking.getId(), booking);
+		return formData;
 	}
 
 	@Override
@@ -106,13 +105,19 @@ public class BookingService extends AbstractBaseService<Booking, BookingRecord> 
 
 	private void recordToFormData(BookingFormData formData, BookingRecord booking) {
 		if (booking != null && formData != null) {
-			formData.getBookingId().setValue(booking.getId());
-			formData.getDescription().setValue(booking.getDescription());
-			formData.getDateFrom().setValue(booking.getDateFrom());
-			formData.getDateTo().setValue(booking.getDateTo());
-			formData.getNote().setValue(booking.getNote());
-			formData.getUserId().setValue(booking.getUserId());
+			setValueWhenNull(formData.getBookingId(), booking.getId());
+			setValueWhenNull(formData.getDescription(), booking.getDescription());
+			setValueWhenNull(formData.getDateFrom(), booking.getDateFrom());
+			setValueWhenNull(formData.getDateTo(), booking.getDateTo());
+			setValueWhenNull(formData.getNote(), booking.getNote());
+			setValueWhenNull(formData.getUserId(), booking.getUserId());
 			formData.getActive().setValue(booking.getActive());
+		}
+	}
+
+	private <T> void setValueWhenNull(AbstractValueFieldData<T> field, T value) {
+		if (field.getValue() == null) {
+			field.setValue(value);
 		}
 	}
 

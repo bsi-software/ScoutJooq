@@ -27,8 +27,8 @@ public class BookingTable extends AbstractCoreTable {
 				.createTable(getName())
 				.column(ID, TYPE_ID)
 				.column(DESCRIPTION, TYPE_STRING_M)
-				.column(DATE_FROM, TYPE_DATE)
-				.column(DATE_TO, TYPE_DATE)
+				.column(DATE_FROM, TYPE_TIME_STAMP)
+				.column(DATE_TO, TYPE_TIME_STAMP)
 				.column(NOTE, TYPE_STRING_XL)
 				// foreign key to user
 				.column(USER_ID, TYPE_ID_OPTIONAL)

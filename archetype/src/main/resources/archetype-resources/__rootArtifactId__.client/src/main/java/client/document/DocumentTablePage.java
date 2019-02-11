@@ -18,14 +18,14 @@ import ${package}.shared.document.IDocumentService;
 @Data(DocumentTablePageData.class)
 public class DocumentTablePage extends AbstractPageWithTable<Table> {
 
-	private String paymentId;
+	private String bookingId;
 
-	public String getPaymentId() {
-		return paymentId;
+	public String getBookingId() {
+		return bookingId;
 	}
 
-	public void setPaymentId(String paymentId) {
-		this.paymentId = paymentId;
+	public void setBookingId(String paymentId) {
+		this.bookingId = paymentId;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class DocumentTablePage extends AbstractPageWithTable<Table> {
 
 	@Override
 	protected void execLoadData(SearchFilter filter) {
-		importPageData(BEANS.get(IDocumentService.class).getDocumentTableData(filter, getPaymentId()));
+		importPageData(BEANS.get(IDocumentService.class).getDocumentTableData(filter, getBookingId()));
 	}
 
 	public class Table extends AbstractDocumentTable  {
@@ -61,7 +61,7 @@ public class DocumentTablePage extends AbstractPageWithTable<Table> {
 
 		@Override
 		protected String getBookingId() {
-			return DocumentTablePage.this.getPaymentId();
+			return DocumentTablePage.this.getBookingId();
 		}
 	}
 }

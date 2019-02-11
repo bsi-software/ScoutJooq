@@ -22,7 +22,7 @@ public class BookingNodePage extends AbstractPageWithNodes {
 	@Override
 	protected void execCreateChildPages(List<IPage<?>> pageList) {
 		DocumentTablePage documentTablePage = new DocumentTablePage();
-		documentTablePage.setPaymentId(getBookingId());
+		documentTablePage.setBookingId(getBookingId());
 		pageList.add(documentTablePage);
 	}
 
