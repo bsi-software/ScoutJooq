@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class BookingDocument extends TableImpl<BookingDocumentRecord> {
 
-    private static final long serialVersionUID = -2131762697;
+    private static final long serialVersionUID = 970341269;
 
     /**
      * The reference instance of <code>core.BOOKING_DOCUMENT</code>
@@ -50,6 +50,11 @@ public class BookingDocument extends TableImpl<BookingDocumentRecord> {
     public Class<BookingDocumentRecord> getRecordType() {
         return BookingDocumentRecord.class;
     }
+
+    /**
+     * The column <code>core.BOOKING_DOCUMENT.BOOKING_DOCUMENT_ID</code>.
+     */
+    public final TableField<BookingDocumentRecord, String> BOOKING_DOCUMENT_ID = createField("BOOKING_DOCUMENT_ID", org.jooq.impl.SQLDataType.VARCHAR(36).nullable(false), this, "");
 
     /**
      * The column <code>core.BOOKING_DOCUMENT.BOOKING_ID</code>.

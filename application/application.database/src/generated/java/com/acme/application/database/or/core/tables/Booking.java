@@ -4,7 +4,7 @@
 package com.acme.application.database.or.core.tables;
 
 
-import com.acme.application.database.generator.converter.DateConverter;
+import com.acme.application.database.generator.converter.TimeStampConverter;
 import com.acme.application.database.or.core.Core;
 import com.acme.application.database.or.core.Keys;
 import com.acme.application.database.or.core.tables.records.BookingRecord;
@@ -38,7 +38,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Booking extends TableImpl<BookingRecord> {
 
-    private static final long serialVersionUID = -1768725840;
+    private static final long serialVersionUID = -1279284962;
 
     /**
      * The reference instance of <code>core.BOOKING</code>
@@ -66,12 +66,12 @@ public class Booking extends TableImpl<BookingRecord> {
     /**
      * The column <code>core.BOOKING.DATE_FROM</code>.
      */
-    public final TableField<BookingRecord, Date> DATE_FROM = createField("DATE_FROM", org.jooq.impl.SQLDataType.DATE, this, "", new DateConverter());
+    public final TableField<BookingRecord, Date> DATE_FROM = createField("DATE_FROM", org.jooq.impl.SQLDataType.TIMESTAMP, this, "", new TimeStampConverter());
 
     /**
      * The column <code>core.BOOKING.DATE_TO</code>.
      */
-    public final TableField<BookingRecord, Date> DATE_TO = createField("DATE_TO", org.jooq.impl.SQLDataType.DATE, this, "", new DateConverter());
+    public final TableField<BookingRecord, Date> DATE_TO = createField("DATE_TO", org.jooq.impl.SQLDataType.TIMESTAMP, this, "", new TimeStampConverter());
 
     /**
      * The column <code>core.BOOKING.NOTE</code>.

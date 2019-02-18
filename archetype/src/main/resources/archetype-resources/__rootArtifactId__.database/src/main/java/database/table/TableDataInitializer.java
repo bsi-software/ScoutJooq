@@ -3,12 +3,16 @@
 #set( $symbol_escape = '\' )
 package ${package}.database.table;
 
-import java.io.File;
 import java.math.BigDecimal;
-import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.Year;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
@@ -54,6 +58,7 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 	public static final PersonRecord PERSON_ROOT = new PersonRecord("8be7647c-a5d4-408f-b7b6-7b36461b56c4", "Root", "", CODE_MALE.getId(), true);
 	public static final PersonRecord PERSON_ALICE = new PersonRecord("368a17b5-eda6-4d98-ae89-114e6244736c", "Alice", "", CODE_FEMALE.getId(), true);
 	public static final PersonRecord PERSON_BOB = new PersonRecord("5cb35b19-a17c-40fa-834e-c6a9222480be", "Bob", "", CODE_MALE.getId(), true);
+	public static final PersonRecord PERSON_RABBIT = new PersonRecord("5cb35b19-a17c-40fa-834e-c6a9222480bf", "Rabbit", "", CODE_UNDEFINED.getId(), true);
 
 	public static final UserRecord USER_ROOT = new UserRecord(
 			UserTable.ROOT,
@@ -69,12 +74,20 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 			PasswordUtility.calculateEncodedPassword("test"),
 			true);
 
+	public static final UserRecord USER_RABBIT = new UserRecord(
+			"rabbit",
+			PERSON_RABBIT.getId(),
+			TextTable.LOCALE_DEFAULT,
+			PasswordUtility.calculateEncodedPassword("hole"),
+			true);
+
 	public static final RoleRecord ROLE_ROOT = new RoleRecord(RoleTable.ROOT, RoleTable.ROOT, true);
 	public static final RoleRecord ROLE_USER = new RoleRecord(RoleTable.USER, RoleTable.USER, true);
 	public static final RoleRecord ROLE_GUEST = new RoleRecord(RoleTable.GUEST, RoleTable.GUEST, false);
 
 	public static final UserRoleRecord USER_ROLE_ROOT = new UserRoleRecord(UserTable.ROOT, RoleTable.ROOT);
 	public static final UserRoleRecord USER_ROLE_ALICE = new UserRoleRecord(USER_ALICE.getUsername(), RoleTable.USER);
+	public static final UserRoleRecord USER_ROLE_RABBIT = new UserRoleRecord(USER_RABBIT.getUsername(), RoleTable.USER);
 
 	public static byte [] DOCUMENT_README = "hello world".getBytes();
 	public static String DOCUMENT_LOGO_NAME = "EclipseScout_Logo.png";
@@ -96,9 +109,6 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 	public static final TextRecord TEXT_TYPE_SEX_DE = new TextRecord(TYPE_ID_SEX, TextTable.LOCALE_GERMAN, "Geschlecht");
 	public static final TextRecord TEXT_USER_DE = new TextRecord(RoleTable.toTextKey(RoleTable.USER), Locale.GERMAN.toLanguageTag(), "Benutzer");
 	public static final TextRecord TEXT_GUEST_DE = new TextRecord(RoleTable.toTextKey(RoleTable.GUEST), Locale.GERMAN.toLanguageTag(), "Gast");
-
-	public static final BookingRecord BOOKING_ALICE = new BookingRecord("a4e8fea9-e646-4e8e-897f-5f3b1d961234", "Vacation", new Date(), new Date(), "Note 1", USER_ALICE.getUsername(), Boolean.TRUE);
-	public static final BookingDocumentRecord BOOKING_DOCUMENT_ALICE_1 = new BookingDocumentRecord(BOOKING_ALICE.getId(), DOCUMENT_ALICE_1.getId());
 
 	//----------------------------------------------------------------------------------//
 	private int index;
@@ -213,30 +223,56 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 	private void insertSamplePersons(DSLContext ctx) {
 		insert(ctx, PERSON_ALICE);
 		insert(ctx, PERSON_BOB);
+		insert(ctx, PERSON_RABBIT);
 	}
 
 	private void insertSampleRoles(DSLContext ctx) {
 		insert(ctx, USER_ROLE_ALICE);
+		insert(ctx, USER_ROLE_RABBIT);
 	}
 
 	private void insertSampleUsers(DSLContext ctx) {
 		insert(ctx, USER_ALICE);
+		insert(ctx, USER_RABBIT);
 	}
 
 	private void insertSampleDocuments(DSLContext ctx) {
 		insert(ctx, DOCUMENT_ALICE_1);
-
-		// TODO does not work on tomcat, find out why
-		// load image file from src/main/resource folder into database
-//		byte [] content = loadResourceBytes("file/" + DOCUMENT_LOGO_NAME);
-//		DOCUMENT_ALICE_2.setContent(content);
-//		DOCUMENT_ALICE_2.setSize(BigDecimal.valueOf(content.length));
-//		insert(ctx, DOCUMENT_ALICE_2);
 	}
 
 	private void insertSampleBookings(DSLContext ctx) {
-		insert(ctx, BOOKING_ALICE);
-		insert(ctx, BOOKING_DOCUMENT_ALICE_1);
+		UserRecord[] users = {USER_ALICE, USER_RABBIT, USER_ROOT};
+		Instant dayOne = Year.now().atMonth(1).atDay(1).atTime(8, 0).atZone(ZoneId.systemDefault()).toInstant();
+		for (int days = 0; days < 90; days++) {
+			Instant from = dayOne.plus(days, ChronoUnit.DAYS);
+			for (int i = 0; i < users.length; i++) {
+				UserRecord user = users[i];
+				BookingRecord bookingRecord = createBookingRecord(i, from, user);
+				BookingDocumentRecord documentRecord = createBookingDocumentRecord(bookingRecord);
+
+				insert(ctx, bookingRecord);
+				insert(ctx, documentRecord);
+			}
+		}
+	}
+
+	private BookingRecord createBookingRecord(int userNr, Instant from, UserRecord user) {
+		String id = createId();
+		String userName = user.getUsername();
+		Date dateFrom = Date.from(from);
+		String dateDesc = new SimpleDateFormat("EEE, d MMM yyyy").format(dateFrom);
+		String description = String.format("Work %s %s", userName, dateDesc);
+		long hoursAdded = (long) new Random().nextInt(6) + userNr;
+		Date dateTo = Date.from(from.plus(hoursAdded, ChronoUnit.HOURS));
+		String note = String.format("Note %s %s", userName, dateDesc);
+		return new BookingRecord(id, description, dateFrom, dateTo, note, userName, Boolean.TRUE);
+	}
+
+	private BookingDocumentRecord createBookingDocumentRecord(BookingRecord bookingRecord) {
+		String bookingRecordId = createId();
+		String bookingId = bookingRecord.getId();
+		String documentid = DOCUMENT_ALICE_1.getId();
+		return new BookingDocumentRecord(bookingRecordId, bookingId, documentid);
 	}
 
 	private void insert(DSLContext ctx, org.jooq.Record record) {
@@ -264,32 +300,5 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 
 	private static BigDecimal getSize(byte [] content) {
 		return content != null ? BigDecimal.valueOf(content.length) : BigDecimal.ZERO;
-	}
-
-	private byte [] loadResourceBytes(String fileName) {
-		byte [] content = null;
-
-		try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			String filePath = classLoader.getResource(fileName).getPath();
-			LOG.info("Raw path {}", filePath);
-
-			if(System.getProperty("os.name").contains("indow")) {
-				if(filePath.startsWith("file:/") && filePath.charAt(7) == ':') {
-					filePath = filePath.substring(6);
-				}
-			}
-
-			LOG.info("Processed path {}", filePath);
-			File file = new File(filePath);
-
-			content = Files.readAllBytes(file.toPath());
-			LOG.info("Resource {} successfully loaded", filePath);
-		}
-		catch (Exception e) {
-			LOG.error("Exception reading resource {}", fileName, e);
-		}
-
-		return content;
 	}
 }

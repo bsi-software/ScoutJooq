@@ -74,14 +74,15 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 
 	@Override
 	public void store(String name, byte[] content, String userId, String bookingId) {
-		String id = TableUtility.createId();
+		String documentId = TableUtility.createId();
+		String bookingDocumentId = TableUtility.createId();
 		String type = getDocumentType(name);
 		BigDecimal size = BigDecimal.valueOf(content.length);
 		String uploaded = DateTimeUtility.nowInUtcAsString();
-		DocumentRecord document = new DocumentRecord(id, name, type, size, content, userId, uploaded, true);
+		DocumentRecord document = new DocumentRecord(documentId, name, type, size, content, userId, uploaded, true);
 
-		store(id, document);
-		BEANS.get(BookingDocumentService.class).store(bookingId, new BookingDocumentRecord(bookingId, id));
+		store(documentId, document);
+		BEANS.get(BookingDocumentService.class).store(bookingDocumentId, new BookingDocumentRecord(bookingDocumentId, bookingId, documentId));
 	}
 
 	private String getDocumentType(String name) {
@@ -118,13 +119,24 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
 
 	private void forEachDocumentWithBookingId(String bookingId, Consumer<? super DocumentRecord> consumer) {
 		getContext()
-        .selectFrom(getTable())
-        .whereExists(
-        		getContext()
+		.selectFrom(getTable())
+		.where(getIdColumn().in(
+				getContext()
         		.select(BookingDocument.BOOKING_DOCUMENT.DOCUMENT_ID)
         		.from(BookingDocument.BOOKING_DOCUMENT)
-        		.where(BookingDocument.BOOKING_DOCUMENT.BOOKING_ID.eq(bookingId)))
-        .stream()
+        		.where(BookingDocument.BOOKING_DOCUMENT.BOOKING_ID.eq(bookingId))
+        		))
+		.stream()
 		.forEach(consumer);
+
+//		getContext()
+//        .selectFrom(getTable())
+//        .whereExists(
+//        		getContext()
+//        		.select(BookingDocument.BOOKING_DOCUMENT.DOCUMENT_ID)
+//        		.from(BookingDocument.BOOKING_DOCUMENT)
+//        		.where(BookingDocument.BOOKING_DOCUMENT.BOOKING_ID.eq(bookingId)))
+//        .stream()
+//		.forEach(consumer);
 	}
 }

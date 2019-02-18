@@ -85,7 +85,7 @@ public class Keys {
 
     private static class UniqueKeys0 {
         public static final UniqueKey<BookingRecord> PK_BOOKING = Internal.createUniqueKey(Booking.BOOKING, "PK_BOOKING", Booking.BOOKING.ID);
-        public static final UniqueKey<BookingDocumentRecord> PK_BOOKING_DOCUMENT = Internal.createUniqueKey(BookingDocument.BOOKING_DOCUMENT, "PK_BOOKING_DOCUMENT", BookingDocument.BOOKING_DOCUMENT.BOOKING_ID);
+        public static final UniqueKey<BookingDocumentRecord> PK_BOOKING_DOCUMENT = Internal.createUniqueKey(BookingDocument.BOOKING_DOCUMENT, "PK_BOOKING_DOCUMENT", BookingDocument.BOOKING_DOCUMENT.BOOKING_DOCUMENT_ID);
         public static final UniqueKey<CodeRecord> PK_CODE = Internal.createUniqueKey(Code.CODE, "PK_CODE", Code.CODE.ID, Code.CODE.TYPE_ID);
         public static final UniqueKey<DocumentRecord> PK_DOCUMENT = Internal.createUniqueKey(Document.DOCUMENT, "PK_DOCUMENT", Document.DOCUMENT.ID);
         public static final UniqueKey<PersonRecord> PK_PERSON = Internal.createUniqueKey(Person.PERSON, "PK_PERSON", Person.PERSON.ID);

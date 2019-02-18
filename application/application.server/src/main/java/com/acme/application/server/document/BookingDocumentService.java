@@ -14,7 +14,7 @@ import com.acme.application.database.or.core.tables.records.BookingDocumentRecor
 import com.acme.application.server.common.AbstractBaseService;
 import com.acme.application.shared.document.IDocumentService;
 
-public class BookingDocumentService  extends AbstractBaseService<BookingDocument, BookingDocumentRecord> implements IService{
+public class BookingDocumentService  extends AbstractBaseService<BookingDocument, BookingDocumentRecord> implements IService {
 
 	@Override
 	public BookingDocument getTable() {
@@ -23,6 +23,10 @@ public class BookingDocumentService  extends AbstractBaseService<BookingDocument
 
 	@Override
 	public Field<String> getIdColumn() {
+		return BookingDocument.BOOKING_DOCUMENT.BOOKING_DOCUMENT_ID;
+	}
+
+	public Field<String> getBookingIdColumn() {
 		return BookingDocument.BOOKING_DOCUMENT.BOOKING_ID;
 	}
 
@@ -35,10 +39,13 @@ public class BookingDocumentService  extends AbstractBaseService<BookingDocument
 	public int delete(String id) {
 		List<BookingDocumentRecord> records = getContext()
 				.selectFrom(getTable())
-				.where(getIdColumn().eq(id))
+				.where(getBookingIdColumn().eq(id))
 				.fetchStream()
 				.collect(Collectors.toList());
-		int delete = super.delete(id);
+		int delete = getContext()
+	    		.delete(getTable())
+	    		.where(getBookingIdColumn().eq(id))
+	    		.execute();
 		if (delete > 0) {
 			IDocumentService service = BEANS.get(IDocumentService.class);
 			records

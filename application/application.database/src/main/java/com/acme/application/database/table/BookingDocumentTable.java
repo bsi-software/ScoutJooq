@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 public class BookingDocumentTable extends AbstractCoreTable {
 
 	public static final String TABLE = "BOOKING_DOCUMENT";
+	public static final String BOOKING_DOCUMENT_ID = "BOOKING_DOCUMENT_ID";
 	public static final String BOOKING_ID = "BOOKING_ID";
 	public static final String DOCUMENT_ID = "DOCUMENT_ID";
 
@@ -19,10 +20,11 @@ public class BookingDocumentTable extends AbstractCoreTable {
 	public String createSQLInternal() {
 		return getContext()
 				.createTable(getName())
+				.column(BOOKING_DOCUMENT_ID, TYPE_ID)
 				.column(BOOKING_ID, TYPE_ID)
 				.column(DOCUMENT_ID, TYPE_ID)
 				.constraints(
-						DSL.constraint(getPKName()).primaryKey(BOOKING_ID))
+						DSL.constraint(getPKName()).primaryKey(BOOKING_DOCUMENT_ID))
 				.getSQL();
 	}
 
