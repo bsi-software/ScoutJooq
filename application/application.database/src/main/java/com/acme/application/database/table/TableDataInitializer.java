@@ -60,7 +60,7 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 	public static final UserRecord USER_ROOT = new UserRecord(
 			UserTable.ROOT,
 			PERSON_ROOT.getId(),
-			TextTable.LOCALE_GERMAN,
+			Locale.ENGLISH.toLanguageTag(),
 			PasswordUtility.calculateEncodedPassword("eclipse"),
 			true);
 
@@ -86,7 +86,7 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 	public static final UserRoleRecord USER_ROLE_ALICE = new UserRoleRecord(USER_ALICE.getUsername(), RoleTable.USER);
 	public static final UserRoleRecord USER_ROLE_RABBIT = new UserRoleRecord(USER_RABBIT.getUsername(), RoleTable.USER);
 
-	public static byte [] DOCUMENT_README = "hello world".getBytes();
+	public static byte[] DOCUMENT_README = "hello world".getBytes();
 	public static String DOCUMENT_LOGO_NAME = "EclipseScout_Logo.png";
 	public static String TIMESTAMP = DateTimeUtility.nowInUtcAsString();
 	public static final DocumentRecord DOCUMENT_ALICE_1 = new DocumentRecord("a4e8fea9-e646-4e8e-897f-5f3b1d96202a", "Readme.txt", "txt", getSize(DOCUMENT_README), DOCUMENT_README, USER_ALICE.getUsername(), TIMESTAMP, true);
@@ -213,7 +213,6 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 		insertSamplePersons(ctx);
 		insertSampleUsers(ctx);
 		insertSampleRoles(ctx);
-		insertSampleDocuments(ctx);
 		insertSampleBookings(ctx);
 	}
 
@@ -233,42 +232,52 @@ public class TableDataInitializer extends TableUtility implements IDataInitializ
 		insert(ctx, USER_RABBIT);
 	}
 
-	private void insertSampleDocuments(DSLContext ctx) {
-		insert(ctx, DOCUMENT_ALICE_1);
-	}
-
 	private void insertSampleBookings(DSLContext ctx) {
 		UserRecord[] users = {USER_ALICE, USER_RABBIT, USER_ROOT};
 		Instant dayOne = Year.now().atMonth(1).atDay(1).atTime(8, 0).atZone(ZoneId.systemDefault()).toInstant();
 		for (int days = 0; days < 90; days++) {
 			Instant from = dayOne.plus(days, ChronoUnit.DAYS);
 			for (int i = 0; i < users.length; i++) {
-				UserRecord user = users[i];
-				BookingRecord bookingRecord = createBookingRecord(i, from, user);
-				BookingDocumentRecord documentRecord = createBookingDocumentRecord(bookingRecord);
-
-				insert(ctx, bookingRecord);
-				insert(ctx, documentRecord);
+				insertBookingWithUserAndDay(users[i], from, ctx);
 			}
 		}
 	}
 
-	private BookingRecord createBookingRecord(int userNr, Instant from, UserRecord user) {
+	private void insertBookingWithUserAndDay(UserRecord user, Instant day, DSLContext ctx) {
+		BookingRecord bookingRecord = createBookingRecord(day, user);
+		DocumentRecord documentRecord = createDocumentRecord(user);
+		BookingDocumentRecord bookingDocumentRecord = createBookingDocumentRecord(bookingRecord, documentRecord);
+
+		insert(ctx, bookingRecord);
+		insert(ctx, documentRecord);
+		insert(ctx, bookingDocumentRecord);
+	}
+
+	private BookingRecord createBookingRecord(Instant from, UserRecord user) {
 		String id = createId();
 		String userName = user.getUsername();
 		Date dateFrom = Date.from(from);
 		String dateDesc = new SimpleDateFormat("EEE, d MMM yyyy").format(dateFrom);
 		String description = String.format("Work %s %s", userName, dateDesc);
-		long hoursAdded = (long) new Random().nextInt(6) + userNr;
+		long hoursAdded = (long) new Random().nextInt(6);
 		Date dateTo = Date.from(from.plus(hoursAdded, ChronoUnit.HOURS));
 		String note = String.format("Note %s %s", userName, dateDesc);
 		return new BookingRecord(id, description, dateFrom, dateTo, note, userName, Boolean.TRUE);
 	}
 
-	private BookingDocumentRecord createBookingDocumentRecord(BookingRecord bookingRecord) {
+	private DocumentRecord createDocumentRecord(UserRecord user) {
+		String id = createId();
+		String name = "Readme.txt";
+		String fileExtension = "txt";
+		BigDecimal size = getSize(DOCUMENT_README);
+		String userName = user.getUsername();
+		return new DocumentRecord(id, name, fileExtension, size, DOCUMENT_README, userName, TIMESTAMP, true);
+	}
+
+	private BookingDocumentRecord createBookingDocumentRecord(BookingRecord bookingRecord, DocumentRecord documentRecord) {
 		String bookingRecordId = createId();
 		String bookingId = bookingRecord.getId();
-		String documentid = DOCUMENT_ALICE_1.getId();
+		String documentid = documentRecord.getId();
 		return new BookingDocumentRecord(bookingRecordId, bookingId, documentid);
 	}
 

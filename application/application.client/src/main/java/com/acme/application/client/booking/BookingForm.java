@@ -362,6 +362,7 @@ public class BookingForm extends AbstractForm {
 
 						@Override
 						protected void importFieldData(DocumentTable documentTable) {
+							documentTable.setValueSet(true);
 							importFormFieldData(documentTable, false);
 						}
 					}

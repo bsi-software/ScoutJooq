@@ -125,15 +125,5 @@ public class DocumentService extends AbstractBaseService<Document, DocumentRecor
         		))
 		.stream()
 		.forEach(consumer);
-
-//		getContext()
-//        .selectFrom(getTable())
-//        .whereExists(
-//        		getContext()
-//        		.select(BookingDocument.BOOKING_DOCUMENT.DOCUMENT_ID)
-//        		.from(BookingDocument.BOOKING_DOCUMENT)
-//        		.where(BookingDocument.BOOKING_DOCUMENT.BOOKING_ID.eq(bookingId)))
-//        .stream()
-//		.forEach(consumer);
 	}
 }
