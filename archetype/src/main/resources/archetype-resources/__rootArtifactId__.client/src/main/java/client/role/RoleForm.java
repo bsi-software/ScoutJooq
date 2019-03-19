@@ -176,7 +176,7 @@ public class RoleForm extends AbstractForm {
 		protected void execStore() {
 			RoleFormData formData = new RoleFormData();
 			exportFormData(formData);
-			formData = BEANS.get(IRoleService.class).store(formData);
+			BEANS.get(IRoleService.class).store(formData);
 		}
 
 		@Override
@@ -195,7 +195,7 @@ public class RoleForm extends AbstractForm {
 		@Override
 		protected void execLoad() {
 			setEnabledPermission(new CreateRolePermission());
-			
+
 			RoleFormData formData = new RoleFormData();
 			exportFormData(formData);
 			formData = BEANS.get(IRoleService.class).load(formData);

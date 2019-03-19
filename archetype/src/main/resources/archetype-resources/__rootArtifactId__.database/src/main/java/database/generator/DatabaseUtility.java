@@ -4,27 +4,26 @@
 package ${package}.database.generator;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jooq.DSLContext;
+import org.jooq.Schema;
+import org.jooq.Table;
 
 public class DatabaseUtility {
 
 	public static List<String> getSchemaNames(DSLContext context) {
-		return context
-				.meta()
-				.getSchemas()
-				.stream()
-				.map(schema -> { return schema.getName(); })
-				.collect(Collectors.toList());
+		return getNames(context.meta().getSchemas(), Schema::getName);
 	}
 
 	public static List<String> getTableNames(DSLContext context) {
-		return context
-				.meta()
-				.getTables()
-				.stream()
-				.map(table -> { return table.getName(); })
+		return getNames(context.meta().getTables(), Table::getName);
+	}
+
+	private static <T> List<String> getNames(List<? extends T> databaseObjects, Function<? super T, String> getterName) {
+		return databaseObjects.stream()
+				.map(getterName)
 				.collect(Collectors.toList());
 	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.scout.rt.shared.services.common.jdbc.SearchFilter;
 
 import ${package}.client.common.AbstractExportableTable;
 import ${package}.client.user.UserTablePage.Table;
+import ${package}.shared.FontAwesomeIcons;
 import ${package}.shared.user.CreateUserPermission;
 import ${package}.shared.user.IUserService;
 import ${package}.shared.user.UserTablePageData;
@@ -47,7 +48,7 @@ public class UserTablePage extends AbstractPageWithTable<Table> {
 	}
 
 	public class Table extends AbstractExportableTable {
-		
+
 		@Override
 		public IOutline getPageOutline() {
 			return getOutline();
@@ -165,9 +166,7 @@ public class UserTablePage extends AbstractPageWithTable<Table> {
 
 			@Override
 			protected String getConfiguredIconId() {
-				// get unicode from http://fontawesome.io/icon/magic/
-				return "font:awesomeIcons ${symbol_escape}uf0d0";
-
+				return FontAwesomeIcons.fa_magic;
 			}
 
 			@Override
@@ -194,8 +193,7 @@ public class UserTablePage extends AbstractPageWithTable<Table> {
 
 			@Override
 			protected String getConfiguredIconId() {
-				// get unicode from http://fontawesome.io/icon/pencil/
-				return "font:awesomeIcons ${symbol_escape}uf040";
+				return FontAwesomeIcons.fa_pencil;
 			}
 
 			@Override

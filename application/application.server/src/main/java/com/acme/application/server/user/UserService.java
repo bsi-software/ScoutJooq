@@ -65,15 +65,13 @@ public class UserService extends AbstractBaseService<User, UserRecord> implement
     public List<String> getUsernames() {
         return getAll()
                 .stream()
-                .map(user -> {
-                    return user.getUsername();
-                })
+                .map(UserRecord::getUsername)
                 .collect(Collectors.toList());
     }
 
     /**
      * Gets the user specified by the username.
-     * 
+     *
      * @return the existing user record (or a new empty user record if no existing
      *         record can be found)
      */
@@ -115,9 +113,9 @@ public class UserService extends AbstractBaseService<User, UserRecord> implement
                 .execute();
 
         // add new user roles
-        roles.stream().forEach(role -> {
-            context.executeInsert(new UserRoleRecord(username, role));
-        });
+        roles
+        	.stream()
+        	.forEach(role -> context.executeInsert(new UserRoleRecord(username, role)));
     }
 
     /**
@@ -125,7 +123,7 @@ public class UserService extends AbstractBaseService<User, UserRecord> implement
      */
     private List<String> getRoles(UserRecord user) {
         if (user == null) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
 
         UserRole table = UserRole.USER_ROLE;
@@ -135,9 +133,7 @@ public class UserService extends AbstractBaseService<User, UserRecord> implement
                 .from(table)
                 .where(table.USERNAME.eq(username))
                 .fetchStream()
-                .map(record -> {
-                    return record.getValue(table.ROLE_NAME);
-                })
+                .map(record -> record.getValue(table.ROLE_NAME))
                 .collect(Collectors.toList());
     }
 
@@ -245,14 +241,12 @@ public class UserService extends AbstractBaseService<User, UserRecord> implement
     }
 
     private List<String> toRoleIds(UserFormData formData) {
-        return Arrays.asList(formData.getRoleTable()
-                .getRows())
-                .stream()
-                .filter(row -> row.getAssigned())
-                .map(row -> {
-                    return row.getId();
-                })
-                .collect(Collectors.toList());
+    	return Arrays.asList(formData.getRoleTable().getRows())
+    			.stream()
+    			.filter(RoleTableRowData::getAssigned)
+    			.map(RoleTableRowData::getId)
+    			.collect(Collectors.toList());
+
     }
 
     private UserRecord toUser(UserFormData formData) {
@@ -310,16 +304,11 @@ public class UserService extends AbstractBaseService<User, UserRecord> implement
     }
 
     public List<? extends ILookupRow<String>> getLookupRows(boolean activeOnly) {
-        List<ILookupRow<String>> list = new ArrayList<>();
-
-        getAll()
+        return getAll()
                 .stream()
                 .filter(user -> !activeOnly || (activeOnly && user.getActive()))
-                .forEach(user -> {
-                    list.add(new LookupRow<>(user.getUsername(), getPersonDisplayName(user)));
-                });
-
-        return list;
+                .map(user -> new LookupRow<>(user.getUsername(), getPersonDisplayName(user)))
+                .collect(Collectors.toList());
     }
 
     private String getPersonDisplayName(UserRecord user) {

@@ -61,11 +61,10 @@ public class ApplicationCodeService extends AbstractBaseService<Code, CodeRecord
                 .stream()
                 .forEach(code -> {
                     String id = code.getId();
-
                     ApplicationCodeRowData row = pageData.addRow();
                     row.setId(id);
                     row.setType(typeText);
-                    row.setText(getText(id, locale));
+                    row.setText(code.getText());
                     row.setOrder(BigDecimal.valueOf(code.getOrder()));
                     row.setActive(code.isActive());
                 });

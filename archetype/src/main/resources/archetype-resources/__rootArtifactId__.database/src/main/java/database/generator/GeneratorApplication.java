@@ -39,10 +39,11 @@ public class GeneratorApplication {
 	public static final String DB_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
 	public static final String DB_MAPPING_NAME = "jdbc:derby:memory:SCOUT;create=true";
 	public static final String DB_JOOQ_NAME = "org.jooq.util.derby.DerbyDatabase";
-	public static final SQLDialect DB_DIALECT = SQLDialect.DERBY; 
-	
+	public static final SQLDialect DB_DIALECT = SQLDialect.DERBY;
+
 	// TODO ask how to do this for uuid, does not seem to work (using workaround with varchar(46) for id columns now
 	private static final String CONVERTER_DATE = "${package}.database.generator.converter.DateConverter";
+	private static final String CONVERTER_TIMESTAMP = "${package}.database.generator.converter.TimeStampConverter";
 	private static final String CONVERTER_LONG = "${package}.database.generator.converter.LongConverter";
 	private static final String CONVERTER_UUID = "${package}.database.generator.converter.UUIDConverter";
 
@@ -74,7 +75,12 @@ public class GeneratorApplication {
 											.withTypes("date"),
 											new ForcedType()
 											.withName("java.math.BigDecimal")
-											.withTypes("bigint"))
+											.withTypes("bigint"),
+											new ForcedType()
+											.withUserType("java.util.Date")
+											.withConverter(CONVERTER_TIMESTAMP)
+											.withTypes("timestamp")
+											)
 									.withName(DB_JOOQ_NAME)
 									.withIncludes(".*")
 									.withExcludes("SYS.*|SYSIBM.*"))
@@ -115,7 +121,7 @@ public class GeneratorApplication {
 	}
 
 	private static void createDatabaseObject(DSLContext context, List<String> objects,
-			IDatabaseObject object) throws SQLException 
+			IDatabaseObject object) throws SQLException
 	{
 		String name = object.getName();
 
@@ -123,7 +129,7 @@ public class GeneratorApplication {
 			object.setContext(context);
 			String sql = object.getCreateSQL();
 			context.execute(sql);
-			
+
 			object.getLogger().info("Database object {} successfully created", name);
 		}
 		else {

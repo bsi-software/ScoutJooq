@@ -65,10 +65,9 @@ public class ApplicationCodeTablePage extends AbstractPageWithTable<Table> {
 
 	@Override
 	protected void execLoadData(SearchFilter filter) {
-		ApplicationCodePageData pageData = BEANS.get(IApplicationCodeService.class)
-				.getApplicationCodeTableData(codeType.getCodeTypeClass());
-		
-		importPageData(pageData);
+		IApplicationCodeService service = BEANS.get(IApplicationCodeService.class);
+		Class<? extends IApplicationCodeType> clazz = codeType.getCodeTypeClass();
+		importPageData(service.getApplicationCodeTableData(clazz));
 	}
 
 	public class Table extends AbstractExportableTable {

@@ -28,35 +28,23 @@ public class InitializerApplication {
 	}
 
 	public static DSLContext getContext(Connection connection) {
-		DSLContext context = JooqGeneratorService
-				.getContext(connection, GeneratorApplication.DB_DIALECT);
-		return context;
+		return JooqGeneratorService.getContext(connection, GeneratorApplication.DB_DIALECT);
 	}
 
 	private static void createDatabase(DSLContext context) {
-		createSchemas(context);		
-		createTables(context);
+		createDatabaseObjectsinContext(DatabaseUtility.getTableNames(context), BEANS.all(IGenerateTable.class), context);
+		createDatabaseObjectsinContext(DatabaseUtility.getSchemaNames(context), BEANS.all(IDatabaseSchema.class), context);
 	}
 
-	private static void createTables(DSLContext context) {
-		List<String> tables = DatabaseUtility.getTableNames(context);
-		for (IGenerateTable table : BEANS.all(IGenerateTable.class)) {
-			if(!tables.contains(table.getName())) {
-				table.setContext(context);
-				context.execute(table.getCreateSQL());
-			}
-		}
+	private static void createDatabaseObjectsinContext(List<String> created, List<? extends IDatabaseObject> databaseObjects, DSLContext context) {
+		databaseObjects
+		.stream()
+		.filter(dbObject -> !created.contains(dbObject.getName()))
+		.forEach(dbObject -> {
+			dbObject.setContext(context);
+			context.execute(dbObject.getCreateSQL());
+		});
 	}
-
-	private static void createSchemas(DSLContext context) {
-		List<String> schemas = DatabaseUtility.getSchemaNames(context);
-		for (IDatabaseSchema schema : BEANS.all(IDatabaseSchema.class)) {
-			if(!schemas.contains(schema.getName())) {
-				schema.setContext(context);
-				context.execute(schema.getCreateSQL());
-			}
-		}
-	}	
 
 	private static void insertData(DSLContext context) {
 		BEANS.get(IDataInitializer.class).initialize(context);

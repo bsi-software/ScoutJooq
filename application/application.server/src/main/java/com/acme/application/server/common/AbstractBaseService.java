@@ -57,6 +57,15 @@ public abstract class AbstractBaseService<TABLE extends Table<RECORD>, RECORD ex
         }
     }
 
+    @Override
+    public int delete(String id) {
+    	return getContext()
+    		.delete(getTable())
+    		.where(getIdColumn().eq(id))
+    		.execute();
+
+    }
+
     /**
      * Returns true iff a record with the provided id exists using the specified
      * context
